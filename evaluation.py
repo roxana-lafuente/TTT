@@ -23,7 +23,6 @@
 ##############################################################################
 import subprocess
 import os
-import re
 import platform
 
 def creation_date(path_to_file):
