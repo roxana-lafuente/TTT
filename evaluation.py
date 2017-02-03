@@ -85,7 +85,7 @@ def evaluate(checkbox_indexes, test, reference):
     checkbox_indexes_constants = ["WER","PER","HTER", "GTM", "BLEU","BLEU2GRAM","BLEU3GRAM","BLEU4GRAM"]
     DIRECTORY = os.path.abspath("evaluation_scripts") + "/"
     TER_DIRECTORY = DIRECTORY + "tercom-0.7.25/tercom.7.25.jar"
-    GTM_DIRECTORY = DIRECTORY + "gtm-1.4/"
+    GTM_DIRECTORY = DIRECTORY + "gtm-1.3-binary/gtm.jar"
     EXEC_PERL = "perl "
     EXEC_JAVA = "java "
     return_results = ""
@@ -112,7 +112,7 @@ def evaluate(checkbox_indexes, test, reference):
 
 
                 if checkbox_indexes_constants[checkbox_index] == "GTM":
-                    command_2 = EXEC_JAVA + "-cp " + GTM_DIRECTORY + " gtm" + " -t " +  test + " " + reference
+                    command_2 = EXEC_JAVA + "-jar " + GTM_DIRECTORY + " -t " +  test + " " + reference
                     proc = subprocess.Popen(command_2, shell=True,stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                     result = "\n" + checkbox_indexes_constants[checkbox_index] + "....." + filter_output(proc,"GTM")
 

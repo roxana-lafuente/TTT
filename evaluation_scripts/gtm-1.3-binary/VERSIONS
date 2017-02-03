@@ -1,0 +1,35 @@
+1.3	* Changed text option to interpret newlines as 
+	  segment separators, and number the segments
+	  consecutively.  Previously, all lines in a file 
+	  were glommed into one segment.
+	* Made the SGML reader case insensitive
+
+1.2	* Fixed mispackaged jar in the binary package
+
+1.1	* Plain text input can be chosen using -t.
+	* Encoding is set to ISO8859-15.
+	* Non-standard ASCII can now be used
+	* Added Documentation 
+
+1.0:
+	* Default exponent is now 1.0.
+	* Tie-breaking is now deterministic.
+	* Re-enabled the sanity check suite.
+	* Removed legacy GPL library.
+	* Pointer to TR 03-005.
+	* Samples no longer include non-standard ASCII text.
+	* Added documentation note about non-standard ASCII.
+
+0.3:
+	* Documentation updates.
+	* Temporarily disabled the sanity check suite.
+
+0.2:
+	* Verbose output can be enabled using "-v".
+	* Sanity check suite included.
+
+0.1:
+	* Initial release.
+	* Scoring of segment and document matches.
+
+$Id: VERSIONS,v 1.6 2003/07/09 03:35:44 ls750 Exp $

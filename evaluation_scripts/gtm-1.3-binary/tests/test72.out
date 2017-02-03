@@ -1,0 +1,80 @@
+program options:
+	verbose = on
+	exponent = 1.0
+	score segments = true
+	score documents = true
+	test file = samples/ara-ref1.txt
+	reference file(s) = 
+		samples/ara-sys2.txt
+		samples/ara-sys2.txt
+		samples/ara-sys2.txt
+sampledoc-0 1 0.2962962962962963
+document: sampledoc-0, segment: 1
+	maximum matching = 4.0
+	(maximum matching)^(1/exponent) = 4.0
+	mean length of reference segments = 12.0
+	length of test segment = 15.0
+	segment precision = 0.26666666666666666
+	segment recall = 0.3333333333333333
+	segment f-measure = 0.2962962962962963
+sampledoc-0 2 0.5263157894736842
+document: sampledoc-0, segment: 2
+	maximum matching = 30.0
+	(maximum matching)^(1/exponent) = 30.0
+	mean length of reference segments = 55.0
+	length of test segment = 59.0
+	segment precision = 0.5084745762711864
+	segment recall = 0.5454545454545454
+	segment f-measure = 0.5263157894736842
+sampledoc-0 3 0.5396825396825397
+document: sampledoc-0, segment: 3
+	maximum matching = 17.0
+	(maximum matching)^(1/exponent) = 17.0
+	mean length of reference segments = 28.0
+	length of test segment = 35.0
+	segment precision = 0.4857142857142857
+	segment recall = 0.6071428571428571
+	segment f-measure = 0.5396825396825397
+sampledoc-0 0.5
+document: sampledoc-0
+	total (maximum matching)^(1/exponent) = 51.0
+	total mean length of reference segments = 95.0
+	total length of test segments = 109.0
+	document precision = 0.46788990825688076
+	document recall = 0.5368421052631579
+	document f-measure = 0.5
+sampledoc-1 1 0.34782608695652173
+document: sampledoc-1, segment: 1
+	maximum matching = 4.0
+	(maximum matching)^(1/exponent) = 4.0
+	mean length of reference segments = 13.0
+	length of test segment = 10.0
+	segment precision = 0.4
+	segment recall = 0.3076923076923077
+	segment f-measure = 0.34782608695652173
+sampledoc-1 2 0.5176470588235295
+document: sampledoc-1, segment: 2
+	maximum matching = 22.0
+	(maximum matching)^(1/exponent) = 22.0
+	mean length of reference segments = 41.0
+	length of test segment = 44.0
+	segment precision = 0.5
+	segment recall = 0.5365853658536586
+	segment f-measure = 0.5176470588235295
+sampledoc-1 3 0.5517241379310345
+document: sampledoc-1, segment: 3
+	maximum matching = 24.0
+	(maximum matching)^(1/exponent) = 24.0
+	mean length of reference segments = 41.0
+	length of test segment = 46.0
+	segment precision = 0.5217391304347826
+	segment recall = 0.5853658536585366
+	segment f-measure = 0.5517241379310345
+sampledoc-1 0.5128205128205129
+document: sampledoc-1
+	total (maximum matching)^(1/exponent) = 50.0
+	total mean length of reference segments = 95.0
+	total length of test segments = 100.0
+	document precision = 0.5
+	document recall = 0.5263157894736842
+	document f-measure = 0.5128205128205129

@@ -1,0 +1,100 @@
+test00  -e 9.64598746542958 -s -v -s --scoresegs -s -s --scoredocs +s --scoresegs -e 4.35540566435655 -v --noscoredocs --noscoredocs -v --noscoresegs +s -e 8.60484189045533 --scoresegs +d samples/ara-ref1.txt samples/ara-sys1.txt samples/ara-ref2.txt
+test01  samples/ara-ref2.txt samples/ara-sys1.txt samples/ara-sys1.txt
+test02  +s +s -e 3.46049123554124 +d -v +s --noscoresegs --noscoresegs -s --scoresegs samples/ara-ref2.txt samples/ara-sys1.txt samples/ara-ref1.txt
+test03  -v --scoresegs +s +s -d -v samples/ara-ref1.txt samples/ara-sys1.txt samples/ara-sys2.txt
+test04  -v --noscoredocs -e 6.69783429740772 +d +s +s --scoresegs -d --noscoredocs --noscoredocs -e 2.0875717287155 +d +d --noscoredocs -e 3.22310469960559 +d +s -s +d +d -d --scoresegs +s -d --scoresegs --noscoresegs +d +s --noscoresegs --scoredocs --noscoredocs +s +d +s -s -s +s --scoresegs -v -e 2.95383326096974 --noscoresegs -e 2.26767426116499 samples/ara-ref1.txt samples/ara-ref2.txt
+test05  -d --noscoresegs -v -e 6.45574872188718 -d -d --scoresegs --noscoresegs --noscoredocs -s -e 2.61973620274123 samples/ara-ref1.txt samples/ara-ref1.txt samples/ara-sys2.txt
+test06  --noscoredocs -v --scoresegs -d --noscoresegs samples/ara-ref1.txt samples/ara-sys2.txt
+test07  -s -e 7.85284762653561 +d --noscoredocs +d -e 5.9572290895856 -v -d --noscoredocs samples/ara-sys1.txt samples/ara-sys2.txt
+test08  -e 1.64568776495877 samples/ara-sys2.txt samples/ara-ref2.txt
+test09  -e 2.19523175246191 --noscoredocs --scoredocs +s -s samples/ara-ref1.txt samples/ara-sys2.txt
+test10  --scoresegs --scoresegs --noscoresegs --scoresegs -v --scoredocs --noscoredocs --scoredocs +d --noscoredocs --scoresegs --scoredocs --scoresegs samples/ara-ref2.txt samples/ara-sys1.txt
+test11  --noscoresegs --noscoredocs --scoresegs --scoredocs --noscoredocs --noscoredocs --noscoredocs +d -e 6.93275173237204 -d samples/ara-ref1.txt samples/ara-sys2.txt
+test12  +d --scoredocs -s --scoresegs -e 6.05727118229016 samples/ara-ref2.txt samples/ara-ref2.txt samples/ara-ref2.txt
+test13  --scoresegs --noscoresegs --noscoresegs -e 5.0123664485259 -v --scoresegs +d -d --noscoresegs +d --scoredocs -d +s +s -e 5.36375485100177 -e 3.45179945853928 --scoresegs --scoresegs --scoresegs -v -e 7.55856850137494 -s -d +s --noscoredocs +s samples/ara-sys1.txt samples/ara-sys2.txt samples/ara-ref1.txt samples/ara-sys1.txt
+test14  -e 3.18571888894994 -d --noscoredocs --scoresegs samples/ara-sys2.txt samples/ara-ref2.txt samples/ara-ref1.txt samples/ara-ref1.txt
+test15  --scoredocs --noscoredocs +d +s --noscoresegs --scoresegs --noscoresegs --scoredocs --scoredocs --scoresegs samples/ara-ref2.txt samples/ara-sys1.txt
+test16  -s -d -v --scoresegs +s -d --noscoresegs --scoredocs -s --noscoresegs -d --scoresegs -s +s --scoresegs --scoresegs -e 6.62579108495148 +d samples/ara-ref1.txt samples/ara-sys1.txt
+test17  -s -s --scoredocs -v --noscoredocs +d samples/ara-sys2.txt samples/ara-ref1.txt samples/ara-sys1.txt
+test18  --noscoresegs +d -v +s --scoresegs --scoresegs --scoresegs --scoredocs -v +d --scoresegs samples/ara-sys2.txt samples/ara-ref1.txt samples/ara-sys1.txt samples/ara-sys1.txt
+test19  +s +d -s --scoredocs -s --scoresegs -s --noscoredocs --noscoredocs --scoresegs --noscoresegs --scoredocs +d +d -e 4.18658461062655 --scoredocs +d samples/ara-ref2.txt samples/ara-ref1.txt
+test20  -e 6.92740512051156 --noscoresegs +d --scoresegs --scoresegs samples/ara-ref1.txt samples/ara-ref2.txt samples/ara-sys1.txt samples/ara-sys2.txt
+test21  -d -e 9.00387483668347 --scoredocs --scoredocs samples/ara-ref1.txt samples/ara-sys1.txt samples/ara-ref2.txt
+test22  --scoredocs +s +s --noscoresegs -s samples/ara-sys2.txt samples/ara-sys2.txt
+test23  -v --scoredocs -e 2.83926605020167 samples/ara-ref1.txt samples/ara-ref2.txt samples/ara-sys2.txt samples/ara-sys2.txt
+test24  --scoredocs -s +s --scoresegs samples/ara-sys1.txt samples/ara-ref2.txt
+test25  +s samples/ara-sys1.txt samples/ara-sys2.txt
+test26  --noscoresegs -s --noscoredocs -s +s -d --scoresegs --scoresegs -e 2.16522697709244 +s --noscoresegs -e 1.32387306929356 samples/ara-sys2.txt samples/ara-ref2.txt
+test27  -e 7.01015078593585 +d samples/ara-ref2.txt samples/ara-sys1.txt samples/ara-sys2.txt samples/ara-ref1.txt
+test28  --noscoredocs -d +s -v -v --scoredocs samples/ara-ref2.txt samples/ara-ref2.txt
+test29  +s +s -s -v -e 1.57405025322543 +s --noscoredocs --scoredocs -d +d -d -v +s --noscoredocs --scoresegs --scoresegs -s samples/ara-ref1.txt samples/ara-sys1.txt samples/ara-sys1.txt
+test30  --noscoresegs samples/ara-sys1.txt samples/ara-sys1.txt samples/ara-sys1.txt samples/ara-ref1.txt
+test31  --noscoresegs -e 9.24167595151737 --noscoresegs +d -s --scoresegs --scoredocs --noscoresegs -e 2.00657632371811 +s -v +s --scoredocs --noscoredocs -d --noscoresegs --scoresegs --scoredocs samples/ara-ref2.txt samples/ara-sys1.txt
+test32  --noscoredocs -v -d samples/ara-ref2.txt samples/ara-sys2.txt samples/ara-sys2.txt samples/ara-ref2.txt samples/ara-sys2.txt samples/ara-ref2.txt samples/ara-sys1.txt
+test33  --scoresegs -d -e 2.72318011338363 --noscoresegs +d -v -v -s --noscoredocs --noscoresegs -e 0.976974018730097 --scoresegs +d --scoresegs -e 6.50105877453029 -d +s -s --noscoredocs --noscoresegs -d -d -e 8.09754454822706 -e 7.21557584466339 +s --scoresegs +d --scoredocs -e 2.0175847223064 +s +d samples/ara-ref1.txt samples/ara-ref1.txt
+test34  -v --noscoresegs -v --scoredocs --scoredocs -d --noscoredocs -e 5.62436703234283 -e 8.54200833062539 +s --scoredocs -d -e 1.90660229631604 --scoredocs --noscoresegs --scoresegs -v -s -v --scoredocs --noscoredocs --scoredocs --scoresegs -v +d --noscoredocs --noscoredocs +s -s -s -s +s -e 5.44926858607507 +d +d --scoresegs --noscoresegs +d +d --scoredocs --noscoresegs samples/ara-ref1.txt samples/ara-ref2.txt
+test35  --scoresegs -e 9.80115490774544 +d -s +s --noscoresegs +s --scoredocs -d +s +d -v --noscoredocs -s --scoresegs +s --scoresegs --scoredocs --scoresegs samples/ara-sys1.txt samples/ara-ref1.txt
+test36  -s --noscoredocs --noscoresegs +s +s +s +s --noscoresegs -v -s --noscoredocs -d -s --noscoredocs -v --noscoresegs --scoresegs --scoresegs -d +s samples/ara-sys1.txt samples/ara-ref2.txt
+test37  +d samples/ara-ref1.txt samples/ara-ref2.txt
+test38  -d samples/ara-sys2.txt samples/ara-ref1.txt samples/ara-ref1.txt samples/ara-sys2.txt samples/ara-ref1.txt samples/ara-sys1.txt
+test39  --noscoresegs -v --noscoresegs -e 7.24767260083407 --scoresegs +s samples/ara-ref2.txt samples/ara-sys2.txt
+test40  -s --noscoresegs --noscoredocs --noscoredocs -s samples/ara-sys1.txt samples/ara-ref2.txt samples/ara-sys2.txt
+test41  +d -v -v --noscoredocs --scoredocs --noscoresegs samples/ara-sys2.txt samples/ara-ref1.txt samples/ara-ref2.txt samples/ara-ref2.txt samples/ara-ref1.txt
+test42  samples/ara-ref1.txt samples/ara-sys1.txt samples/ara-ref1.txt
+test43  -d +s -s samples/ara-sys2.txt samples/ara-ref2.txt samples/ara-ref1.txt
+test44  +d --noscoresegs -s -e 9.86449887040827 --scoresegs +d --noscoredocs -s --scoredocs -v -s +d --scoredocs -s samples/ara-ref1.txt samples/ara-sys2.txt
+test45  +d --scoresegs -d samples/ara-ref1.txt samples/ara-sys2.txt samples/ara-sys1.txt samples/ara-ref2.txt
+test46  -d --noscoredocs -s +s --scoresegs -e 5.49738459376254 -e 7.4296485720977 --scoredocs --noscoresegs -e 5.22941185845827 -v --scoredocs samples/ara-ref1.txt samples/ara-sys2.txt samples/ara-ref2.txt
+test47  -s +d --scoredocs samples/ara-ref2.txt samples/ara-ref2.txt
+test48  -v +d --noscoresegs samples/ara-ref2.txt samples/ara-sys1.txt samples/ara-ref2.txt
+test49  --noscoresegs +d samples/ara-ref1.txt samples/ara-sys2.txt samples/ara-sys1.txt samples/ara-ref2.txt samples/ara-ref1.txt
+test50  --noscoredocs -e 4.46734956059252 +s --scoredocs samples/ara-ref2.txt samples/ara-ref1.txt samples/ara-sys2.txt samples/ara-sys2.txt
+test51  samples/ara-sys2.txt samples/ara-sys1.txt samples/ara-ref2.txt samples/ara-ref2.txt
+test52  --scoresegs +d --scoresegs -s samples/ara-sys2.txt samples/ara-ref2.txt
+test53  --noscoresegs +d -v -s -d -d samples/ara-sys1.txt samples/ara-ref2.txt
+test54  --scoresegs --noscoresegs -d --noscoresegs --noscoredocs --noscoresegs --scoresegs --scoresegs samples/ara-ref2.txt samples/ara-ref1.txt samples/ara-ref2.txt samples/ara-sys1.txt samples/ara-sys1.txt
+test55  -v -s -v -e 5.7661525637074 --noscoresegs --noscoresegs --scoredocs --noscoresegs -v -v samples/ara-ref1.txt samples/ara-sys1.txt
+test56  --scoresegs --noscoresegs --scoredocs -v --noscoresegs samples/ara-ref1.txt samples/ara-ref1.txt samples/ara-sys2.txt
+test57  --scoredocs -v +s --scoresegs -s +s -d -v -e 2.61659283905672 +d -v -e 6.21970308379066 samples/ara-ref2.txt samples/ara-sys2.txt
+test58  --noscoresegs --scoredocs --scoresegs --noscoredocs --scoredocs -e 0.936966643304658 -s --scoresegs --scoredocs -s +s -d +s -d -s --scoresegs samples/ara-sys1.txt samples/ara-sys2.txt
+test59  -s -v -v +d samples/ara-sys1.txt samples/ara-sys2.txt
+test60  -e 0.613099652860463 -e 5.81732633562687 -s +s -s --scoredocs --noscoredocs --noscoresegs samples/ara-ref2.txt samples/ara-ref2.txt
+test61  -v samples/ara-ref1.txt samples/ara-ref1.txt
+test62  samples/ara-ref2.txt samples/ara-sys1.txt
+test63  --scoresegs --scoredocs -d -e 3.97454106954807 +s samples/ara-sys1.txt samples/ara-sys2.txt samples/ara-sys2.txt
+test64  -s samples/ara-ref1.txt samples/ara-sys2.txt
+test65  -e 0.453377010626426 --noscoredocs --noscoredocs --scoredocs +s --noscoredocs -e 3.93605359177517 -v --scoredocs --noscoredocs -v -s +d -v -d samples/ara-sys1.txt samples/ara-sys1.txt samples/ara-sys1.txt
+test66  --noscoredocs +d -v --scoredocs -d -v --noscoredocs -s -d --scoredocs samples/ara-ref1.txt samples/ara-ref1.txt
+test67  -v --noscoresegs +s -s +s --scoredocs -s --noscoredocs --noscoredocs +d -v samples/ara-sys2.txt samples/ara-ref2.txt
+test68  samples/ara-ref2.txt samples/ara-sys1.txt
+test69  +d -v -v --scoresegs -e 0.141536676096834 --scoredocs samples/ara-sys1.txt samples/ara-sys1.txt
+test70  -d --scoredocs --noscoresegs +s +d samples/ara-ref2.txt samples/ara-sys1.txt samples/ara-ref2.txt
+test71  --scoredocs +d +s -s samples/ara-ref1.txt samples/ara-ref2.txt samples/ara-sys1.txt
+test72  --noscoresegs -s --scoredocs --scoredocs -s --noscoredocs +s +s -v +d --scoredocs +s +s -v samples/ara-ref1.txt samples/ara-sys2.txt samples/ara-sys2.txt samples/ara-sys2.txt
+test73  samples/ara-sys2.txt samples/ara-sys1.txt
+test74  --noscoresegs -e 1.88225028281668 --scoresegs -d +s samples/ara-sys1.txt samples/ara-ref1.txt samples/ara-sys1.txt
+test75  --noscoredocs --scoredocs +s -d -v +d samples/ara-sys1.txt samples/ara-sys2.txt
+test76  --scoresegs +d --noscoredocs -e 5.21016201375133 -d samples/ara-ref2.txt samples/ara-ref1.txt
+test77  -e 8.01244938844345 +d +s --scoredocs +d --scoresegs --scoredocs --scoredocs --scoresegs -s --noscoredocs --scoresegs --noscoredocs -e 2.07190788916733 samples/ara-ref1.txt samples/ara-ref2.txt samples/ara-sys1.txt
+test78  +d +s --scoresegs -d +d --noscoresegs -v -e 4.75840134758105 -e 8.4756379202063 --scoredocs -v --noscoresegs +s -v -v -v +s -s --noscoredocs +s --noscoredocs --scoresegs --scoresegs -e 7.27817734476087 --scoredocs -d --noscoredocs -e 8.5238066559419 +d --scoresegs -v --scoredocs samples/ara-sys2.txt samples/ara-ref1.txt samples/ara-ref2.txt
+test79  samples/ara-ref1.txt samples/ara-ref2.txt
+test80  samples/ara-ref2.txt samples/ara-sys1.txt
+test81  -d -s -d -e 8.64206644232876 -d +s samples/ara-ref1.txt samples/ara-sys1.txt samples/ara-sys2.txt
+test82  +d --scoredocs +s samples/ara-sys2.txt samples/ara-ref1.txt samples/ara-ref2.txt
+test83  -s -d -e 6.04059240416625 --noscoredocs -v -d --noscoredocs --scoredocs +d -s samples/ara-ref2.txt samples/ara-ref1.txt
+test84  --noscoresegs --scoredocs --noscoresegs -e 8.07756400077704 -v +s --scoresegs -v +d -s --scoredocs --noscoredocs --noscoredocs --noscoredocs --noscoresegs +d --noscoresegs -d --scoresegs +d samples/ara-sys2.txt samples/ara-sys2.txt samples/ara-ref2.txt samples/ara-ref1.txt
+test85  --scoresegs -v --noscoredocs --noscoredocs samples/ara-ref2.txt samples/ara-sys1.txt samples/ara-ref2.txt
+test86  --scoresegs --scoredocs --noscoredocs -e 6.98849967820593 --scoresegs --scoresegs --noscoresegs +d --scoredocs --scoresegs --noscoresegs -v samples/ara-ref1.txt samples/ara-ref2.txt
+test87  -v --noscoredocs --scoredocs -e 7.1788468217559 -v -v samples/ara-sys1.txt samples/ara-sys2.txt samples/ara-ref2.txt
+test88  -d --noscoredocs -s --scoresegs +s --scoredocs -v --noscoredocs +s -s +s -v -d --noscoresegs +d +d -d --noscoredocs --scoresegs -d --scoredocs -d -d --scoredocs -v --scoredocs --noscoresegs --scoresegs --noscoredocs +s --noscoresegs --scoresegs --scoresegs -v -v +d +s --scoredocs --noscoresegs -e 5.60396092955529 +d -v +d +s -s samples/ara-sys2.txt samples/ara-sys1.txt samples/ara-sys2.txt
+test89  --scoredocs +s samples/ara-sys2.txt samples/ara-ref1.txt
+test90  +d -v samples/ara-sys2.txt samples/ara-ref2.txt samples/ara-ref2.txt samples/ara-ref1.txt samples/ara-ref1.txt samples/ara-ref2.txt samples/ara-sys2.txt
+test91  -d -d -s -v +s +s samples/ara-ref1.txt samples/ara-sys1.txt samples/ara-sys2.txt
+test92  --noscoredocs samples/ara-sys1.txt samples/ara-ref1.txt samples/ara-sys2.txt
+test93  -e 5.00330250161401 --scoredocs --noscoresegs samples/ara-ref2.txt samples/ara-sys2.txt samples/ara-sys2.txt samples/ara-ref1.txt samples/ara-ref2.txt
+test94  --scoresegs --noscoresegs --noscoredocs +s +s --scoredocs --scoredocs --noscoredocs --scoredocs --noscoredocs --noscoredocs --scoredocs +d --noscoredocs +s --scoredocs --noscoresegs +s --scoredocs +s --scoresegs -d +s +d -d --noscoresegs --noscoredocs --scoredocs -d --noscoresegs -e 9.62364857580198 -s +s --scoresegs +d -e 1.4374744859197 -s +d --noscoresegs --noscoresegs -e 3.63296402354969 -v --noscoredocs +s +s -s samples/ara-sys1.txt samples/ara-ref1.txt samples/ara-ref1.txt samples/ara-sys1.txt samples/ara-sys2.txt samples/ara-sys2.txt samples/ara-sys2.txt
+test95  +s --noscoredocs --noscoredocs samples/ara-ref1.txt samples/ara-ref2.txt
+test96  -v --noscoresegs --noscoredocs --noscoredocs -s -v --scoresegs +d -s +d samples/ara-sys1.txt samples/ara-ref1.txt
+test97  +s --scoresegs --noscoredocs --scoresegs +d --scoredocs --scoredocs -v -s --noscoredocs -v +s +s --scoredocs --noscoredocs --noscoredocs +d +d -e 1.8732011898361 --scoredocs +d samples/ara-sys1.txt samples/ara-ref1.txt samples/ara-sys2.txt
+test98  --scoresegs -d -v --scoredocs samples/ara-sys1.txt samples/ara-sys2.txt
+test99  --scoredocs samples/ara-ref1.txt samples/ara-ref1.txt

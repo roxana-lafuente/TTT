@@ -1,0 +1,25 @@
+program options:
+	verbose = on
+	exponent = 1.0
+	score segments = false
+	score documents = true
+	test file = samples/ara-ref2.txt
+	reference file(s) = 
+		samples/ara-sys1.txt
+		samples/ara-ref2.txt
+sampledoc-0 0.9498806682577566
+document: sampledoc-0
+	total (maximum matching)^(1/exponent) = 99.5
+	total mean length of reference segments = 100.5
+	total length of test segments = 109.0
+	document precision = 0.9128440366972477
+	document recall = 0.9900497512437811
+	document f-measure = 0.9498806682577566
+sampledoc-1 0.9458128078817735
+document: sampledoc-1
+	total (maximum matching)^(1/exponent) = 96.0
+	total mean length of reference segments = 104.0
+	total length of test segments = 99.0
+	document precision = 0.9696969696969697
+	document recall = 0.9230769230769231
+	document f-measure = 0.9458128078817735

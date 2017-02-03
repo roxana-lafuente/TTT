@@ -1,0 +1,63 @@
+program options:
+	verbose = on
+	exponent = 1.0
+	score segments = true
+	score documents = false
+	test file = samples/ara-ref1.txt
+	reference file(s) = 
+		samples/ara-sys1.txt
+		samples/ara-sys2.txt
+sampledoc-0 1 0.30188679245283023
+document: sampledoc-0, segment: 1
+	maximum matching = 4.0
+	(maximum matching)^(1/exponent) = 4.0
+	mean length of reference segments = 11.5
+	length of test segment = 15.0
+	segment precision = 0.26666666666666666
+	segment recall = 0.34782608695652173
+	segment f-measure = 0.30188679245283023
+sampledoc-0 2 0.5688888888888888
+document: sampledoc-0, segment: 2
+	maximum matching = 32.0
+	(maximum matching)^(1/exponent) = 32.0
+	mean length of reference segments = 53.5
+	length of test segment = 59.0
+	segment precision = 0.5423728813559322
+	segment recall = 0.5981308411214953
+	segment f-measure = 0.5688888888888888
+sampledoc-0 3 0.7559055118110235
+document: sampledoc-0, segment: 3
+	maximum matching = 24.0
+	(maximum matching)^(1/exponent) = 24.0
+	mean length of reference segments = 28.5
+	length of test segment = 35.0
+	segment precision = 0.6857142857142857
+	segment recall = 0.8421052631578947
+	segment f-measure = 0.7559055118110235
+sampledoc-1 1 0.5454545454545454
+document: sampledoc-1, segment: 1
+	maximum matching = 6.0
+	(maximum matching)^(1/exponent) = 6.0
+	mean length of reference segments = 12.0
+	length of test segment = 10.0
+	segment precision = 0.6
+	segment recall = 0.5
+	segment f-measure = 0.5454545454545454
+sampledoc-1 2 0.6081871345029239
+document: sampledoc-1, segment: 2
+	maximum matching = 26.0
+	(maximum matching)^(1/exponent) = 26.0
+	mean length of reference segments = 41.5
+	length of test segment = 44.0
+	segment precision = 0.5909090909090909
+	segment recall = 0.6265060240963856
+	segment f-measure = 0.6081871345029239
+sampledoc-1 3 0.5714285714285714
+document: sampledoc-1, segment: 3
+	maximum matching = 27.0
+	(maximum matching)^(1/exponent) = 27.0
+	mean length of reference segments = 48.5
+	length of test segment = 46.0
+	segment precision = 0.5869565217391305
+	segment recall = 0.5567010309278351
+	segment f-measure = 0.5714285714285714

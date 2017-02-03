@@ -1,0 +1,63 @@
+program options:
+	verbose = on
+	exponent = 1.0
+	score segments = true
+	score documents = false
+	test file = samples/ara-ref2.txt
+	reference file(s) = 
+		samples/ara-sys1.txt
+		samples/ara-ref2.txt
+sampledoc-0 1 0.8823529411764706
+document: sampledoc-0, segment: 1
+	maximum matching = 15.0
+	(maximum matching)^(1/exponent) = 15.0
+	mean length of reference segments = 15.0
+	length of test segment = 19.0
+	segment precision = 0.7894736842105263
+	segment recall = 1.0
+	segment f-measure = 0.8823529411764706
+sampledoc-0 2 0.9543568464730291
+document: sampledoc-0, segment: 2
+	maximum matching = 57.5
+	(maximum matching)^(1/exponent) = 57.5
+	mean length of reference segments = 57.5
+	length of test segment = 63.0
+	segment precision = 0.9126984126984127
+	segment recall = 1.0
+	segment f-measure = 0.9543568464730291
+sampledoc-0 3 0.9818181818181818
+document: sampledoc-0, segment: 3
+	maximum matching = 27.0
+	(maximum matching)^(1/exponent) = 27.0
+	mean length of reference segments = 28.0
+	length of test segment = 27.0
+	segment precision = 1.0
+	segment recall = 0.9642857142857143
+	segment f-measure = 0.9818181818181818
+sampledoc-1 1 0.975609756097561
+document: sampledoc-1, segment: 1
+	maximum matching = 10.0
+	(maximum matching)^(1/exponent) = 10.0
+	mean length of reference segments = 10.5
+	length of test segment = 10.0
+	segment precision = 1.0
+	segment recall = 0.9523809523809523
+	segment f-measure = 0.975609756097561
+sampledoc-1 2 0.967741935483871
+document: sampledoc-1, segment: 2
+	maximum matching = 45.0
+	(maximum matching)^(1/exponent) = 45.0
+	mean length of reference segments = 45.0
+	length of test segment = 48.0
+	segment precision = 0.9375
+	segment recall = 1.0
+	segment f-measure = 0.967741935483871
+sampledoc-1 3 0.9162011173184357
+document: sampledoc-1, segment: 3
+	maximum matching = 41.0
+	(maximum matching)^(1/exponent) = 41.0
+	mean length of reference segments = 48.5
+	length of test segment = 41.0
+	segment precision = 1.0
+	segment recall = 0.845360824742268
+	segment f-measure = 0.9162011173184357

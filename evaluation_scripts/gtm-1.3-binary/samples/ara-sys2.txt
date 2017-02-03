@@ -1,0 +1,10 @@
+<doc docid="sampledoc-0" sysid="sys2">
+<seg id=1>  Amr Mousa visits libya tomorrow  ,  Sunday conversations causation depends in sudan  </seg>
+<seg id=2>  Cairo is 03 - 01 ( an ugh by ) - the Egyptian ministry of foreign affairs declared today saturday in cairo that the foreign minister Amr Mousa will make for tomorrow  ,  Sunday to libya so that he discusses with the Lybian leader Mu 'ammar Gaddafi the Lybian Egyptian peace mediation in sudan  .   </seg>
+<seg id=3>  And coincides Moussa 's visit that lasts an one day with the visit of the Sudanese foreign minister Mustafa Uthman Ismail that connected today saturday to tripoli  .   </seg>
+</doc>
+<doc docid="sampledoc-1" sysid="sys2">
+<seg id=1>  The opening of the festival of the damascus with cinematic one ten saturday  </seg>
+<seg id=2>  Damascus is 82 - 01 ( an ugh by ) - he inaugurates at night after saturday tomorrow in the Syrian capital the cinematic festival of damascus the one ten by partnership 81 feature film from Arab countries a Wagnbia  .   </seg>
+<seg id=3>  And will expose during the opening the Egyptian film " the dates stem " to the director Radwan Al - Kashif by presence of the Egyptian cinemas stars guests of honour like Hussain Fahmi and Yousef Shaaban and Nagla Fathi  .   </seg>
+</doc>

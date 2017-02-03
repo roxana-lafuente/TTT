@@ -1,0 +1,10 @@
+<doc docid="sampledoc-0" sysid="sys1">
+<seg id=1>  Omar Moses libya tomorrow xCPxEJxCPxCDxCF xEJxCPxCCxDJxCPxCJ xCAxCAxDAxEJxDE 's conversations by Sudan  </seg>
+<seg id=2>  Cairo 03 - 01 ( xCPxDD by ) - xCPxDAxEJxEMxCA the ministry of foreign affairs xCPxEJxELxDNxDJxEDxCR today Saturday in Cairo xCPxEM the foreign minister Omar xDLxEDxCAxEOxCCxEN 's razor xCPxEJxCPxCDxCF became to libya for xCPxEJxEJxEDxCQxED xELxDAxELxDJ xCPxEJxDExDIxCPxDDxED  ,  the mediation of the peace  ,  discusses xCPxEJxELxDNxDJxEDxCR xCPxEJxEJxEDxCQxEDxCR with the leader in Sudan  .   </seg>
+<seg id=3>  a visit synchronizes Moses who xCPxEJxDLxEOxCFxCPxEMxED  ,  Mustafa  ,  absorbs Othman one day with the visit of the foreign minister xCPxDLxELxCPxDAxEDxEJ which arrived at Saturday today to Tripoli  .   </seg>
+</doc>
+<doc docid="sampledoc-1" sysid="sys1">
+<seg id=1>  an opening Damascus 's festival the xCPxEJxDLxEDxEMxELxCPxCOxED whose Saturday is eleventh  </seg>
+<seg id=2>  Damascus 82 - 01 ( xCPxDD by ) - an evening  ,  the eleventh xCPxEJxDLxEDxEMxELxCPxCOxED  ,  opens Saturday two days later in the capital of Syria Damascus 's festival by participation of 81 films xDJxEOxCPxCOxEDxCP long from xDAxDJxCQxEDxCR xEOxCPxCCxEMxCQxEDxCR 's states  .   </seg>
+<seg id=3>  the film will show xCPxEJxELxDNxDJxED during the opening " the dates sweated " for the exit of the contentment of the revealer in the presence of the guests of the honor the film stars xCPxEJxELxDNxDJxEDxCR is like Hussein  ,  then they my and Yusuf is a sha 'ban and Najla then she / you inspires  .   </seg>
+</doc>

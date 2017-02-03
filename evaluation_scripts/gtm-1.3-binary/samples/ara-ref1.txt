@@ -1,0 +1,10 @@
+<doc DOCId="sampledoc-0" sysid="ref1">
+<sEG iD=1>  Amru Mussa on a visit to Libya tomorrow  ,  Sunday  ,  for discussions concerning Sudan  </seg>
+<seg id=2>  Cairo 30 - 10 ( AFP ) - The Egyptian Ministry of Foreign Affairs announced in Cairo today  ,  Saturday  ,  that the Minister of Foreign Affairs  ,  Amru Mussa  ,  will head for Libya tomorrow  ,  Sunday  ,  to discuss with the Libyan leader  ,  Muammar al - Qaddafi  ,  the Egypto - Libyan mediation in Sudan  .   </seg>
+<SEG id=3>  Mussa 's visit  ,  which lasts for one day  ,  coincides with the visit of the Sudanese Minister of Foreign Affairs  ,  Mustapha Uthman Ismail  ,  who arrived today  ,  Saturday  ,  in Tripoli  .   </seg>
+</doc>
+<doc docid="sampledoc-1" sysid="ref1">
+<seG id=1>  The opening of the Damascus 11th Film Festival on Saturday  </seg>
+<seg id=2>  Damascus 10 - 28 ( AFP ) - The Damascus 11th film festival will be opened the day after tomorrow  ,  Saturday  ,  in the Syrian capital  ,  in which will be shown 18 feature - length films from Arab and foreign countries  .   </seg>
+<seg id=3>  The Egyptian film " Araq alBalah "  ,  produced by Radhwan al - Kachif  ,  will be shown during the opening ceremony in the presence of the guests of honour and stars of Egyptian cinema such as Hussein Fahmi  ,  Youssof Chaabane and Naglaa Fethi  .   </seg>
+</DOC>

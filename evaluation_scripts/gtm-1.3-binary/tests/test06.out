@@ -1,0 +1,8 @@
+program options:
+	verbose = on
+	exponent = 1.0
+	score segments = false
+	score documents = false
+	test file = samples/ara-ref1.txt
+	reference file(s) = 
+		samples/ara-sys2.txt

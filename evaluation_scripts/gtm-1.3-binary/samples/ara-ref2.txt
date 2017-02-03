@@ -1,0 +1,10 @@
+<doc docid="sampledoc-0" sysid="ref2">
+<seg id=1>  Amr Mossa visits Libya tomorrow  ,  i  .  e  .  on Sunday  ,  to hold talks on Sudan  .   </seg>
+<seg id=2>  Cairo 01 - 03 ( AFP ) - The Egyptian foreign ministry announced today  ,  i  .  e  .  on Saturday  ,  in Cairo  ,  that the Foreign Minister Amr Mossa would go to Libya next day  ,  i  .  e  .  on Sunday  ,  to discuss the Egyptian - Libyan peace mediation in Sudan  ,  with the Libyan leader Moummer Gaddafi  .   </seg>
+<seg id=3>  Mossa 's one - day visit coincides with the Sudanese foreign minister 's visit  ,  who arrived Tripoli today  ,  i  .  e  .  on Saturday  .   </seg>
+</doc>
+<doc docid="sampledoc-1" sysid="ref2">
+<seg id=1>  Eleventh Damascus film festival will be inaugurated on Saturday  .   </seg>
+<seg id=2>  Damascus 01 - 82 AFP - The 11th Damascus film festival will be inaugurated the day after tomorrow  ,  i  .  e  .  on Saturday  ,  in the Syrian capital  .  Eighty - one feature films from Arab and other foreign countries will participate in the festival  .   </seg>
+<seg id=3>  During the inaugural function  ,  the Egyptian film  ,  'Arak Al Balah ' produced by Rizwan Al Kashif will be screened in the presence of the guests of honour  ,  Egyptian actors Hussein Fahmi  ,  Yusuf Shaban and Najla Fathi  .   </seg>
+</doc>
