@@ -1018,7 +1018,7 @@ class MyWindow(Gtk.Window):
                                    Gtk.PositionType.BOTTOM, 1, 10)
 
         # Start corpus preprocessing button.
-        startPostEdition_btn = Gtk.Button(label="Start corpus preprocessing")
+        startPostEdition_btn = Gtk.Button(label="Start Post-editing")
         startPostEdition_btn.connect("clicked", self._check_if_both_files_are_choosen_post_edition)
         # self.preparation.set_border_width(10)
         self.postEditing_file_menu_grid.attach_next_to(startPostEdition_btn,ot_label, Gtk.PositionType.BOTTOM, 3, 1)
