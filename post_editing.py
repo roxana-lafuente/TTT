@@ -83,7 +83,7 @@ import html_injector
 
 class PostEditing:
 
-    def __init__(self, post_editing_source, post_editing_reference, notebook, grid, output_directory):
+    def __init__(self, post_editing_source, post_editing_reference, notebook, grid, output_directory, bilingual = False):
         self.post_editing_source = post_editing_source
         self.post_editing_reference = post_editing_reference
         self.translation_tab_grid = grid
@@ -92,6 +92,7 @@ class PostEditing:
         self.saved_modified_references = []
         self.visibility_of_statistics_menu = True
         self.output_directory = output_directory
+        self.bilingual = bilingual
 
         self.tables = {}
         self.source_log = {}
@@ -107,7 +108,7 @@ class PostEditing:
         self.saved_origin_filepath = self.output_directory + filename
 
 
-        self.tables["translation_table"] =  Table("translation_table",self.post_editing_source,self.post_editing_reference, self.preparePostEditingAnalysis_event,self.preparePostEditingAnalysis, self.calculate_statistics_event, self.translation_tab_grid, self.output_directory)
+        self.tables["translation_table"] =  Table("translation_table",self.post_editing_source,self.post_editing_reference, self.preparePostEditingAnalysis_event,self.preparePostEditingAnalysis, self.calculate_statistics_event, self.translation_tab_grid, self.output_directory, self.bilingual)
 
         self.source_log_filepath = self.output_directory + '/source_log.json'
 

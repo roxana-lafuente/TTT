@@ -43,7 +43,7 @@ except ImportError:
 
 
 class Table:
-    def __init__(self, table_type, source, reference, save_callback_function, save_function,  stats_callback_function, tab_grid, output_directory):
+    def __init__(self, table_type, source, reference, save_callback_function, save_function,  stats_callback_function, tab_grid, output_directory, bilingual = False):
         self.save_callback_function = save_callback_function
         self.stats_callback_function = stats_callback_function
         self.save_function = save_function
@@ -52,25 +52,35 @@ class Table:
         self.reference = reference
         self.tab_grid = tab_grid
         self.output_directory = output_directory
+        self.monolingual = not bilingual
 
         self.saved_reference_filepath = ""
         self.last_segment_changed = -1
-        self._table_initializing()
-        self.make_table_interface()
-        self.update_table()
 
         self.modified_references =  []
         self.last_cell_focused = None
         self.last_cell_focused_index = -1
 
+        table = Gtk.Table(1,1, True)
+        self.table = table
+        self.table.set_col_spacings(5)
+        self.table.set_row_spacings(5)
+        self.table.set_homogeneous(False)
+
+        self._constants_initializing()
+        self.make_table_interface()
+        self.update_table()
+
         # Post Editing: Table
-        search_frame = Gtk.Frame()
-        self.table_scroll_window = Gtk.ScrolledWindow()
-        self.table_scroll_window.set_hexpand(True)
-        self.table_scroll_window.set_vexpand(True)
-        self.table_scroll_window.add(self.table)
-        search_frame.add(self.table_scroll_window)
-        self.tab_grid.attach(search_frame, 0, 1, 2, 1)
+        #search_frame = Gtk.Frame()
+        #self.table_scroll_window = Gtk.ScrolledWindow()
+        #self.table_scroll_window.set_hexpand(True)
+        #self.table_scroll_window.set_vexpand(True)
+        #self.table_scroll_window.add(self.table)
+        #search_frame.add(self.table_scroll_window)
+        self.table.set_hexpand(True)
+        self.table.set_vexpand(True)
+        self.tab_grid.attach(self.table, 0, 1, 2,1)
 
         # Post Editing: Term Search
         table_frame = Gtk.Frame()
@@ -84,6 +94,7 @@ class Table:
         self.search_results_scroll_window.add(self.search_buttons_table)
         table_frame.add(self.search_results_scroll_window)
         self.tab_grid.attach_next_to(table_frame, term_search_frame, Gtk.PositionType.BOTTOM, 2, 1)
+
 
     def make_table_interface(self):
           self.back_button = Gtk.Button("Back")
@@ -236,8 +247,6 @@ class Table:
                       else:
                           self.tables_content[self.reference_text_lines].append(line.strip())
           else:
-              print self.reference
-              print self.source
               if self.source != "" and self.reference != "":
                   with open(self.source) as fp:
                       for line in fp:
@@ -253,23 +262,7 @@ class Table:
                       else:
                           self.tables_content[self.reference_text_lines].append(line)
 
-
-    def toggle_post_editing_mode(self, button):
-        if self.monolingual:
-            self.btn_post_editing_mode.set_label("Bilingual")
-        if not self.monolingual:
-            self.btn_post_editing_mode.set_label("Monolingual")
-        self.monolingual = not self.monolingual
-        try:
-            #try to save even if there is nothing to be saved, yet.
-            self.save_function()
-        except: pass
-        self.tables_content[self.source_text_lines] = []
-        self.tables_content[self.reference_text_lines] = []
-        self._fill_table()
-        self.update_table()
-
-    def _table_initializing(self):
+    def _constants_initializing(self):
         (self.source_text_lines,
         self.unedited_reference_text_lines,
         self.reference_text_lines,
@@ -292,24 +285,8 @@ class Table:
         elif self.table_type == "diff_table":
             self.tables_content[self.get_menu_grid] = Gtk.Grid()
             self.tab_grid.add(self.tables_content[self.get_menu_grid])
-        table = Gtk.Table(1,1, True)
-        self.table = table
+
         self.search_buttons_table = Gtk.Table(1,1, True)
-
-        self.monolingual = True
-        self.btn_post_editing_mode = Gtk.Button("Monolingual")
-        self.btn_post_editing_mode.connect("clicked", self.toggle_post_editing_mode)
-        self.tables_content[self.get_menu_grid].attach(self.btn_post_editing_mode, 2, 2, 30, 3)
-        self.btn_post_editing_mode.set_no_show_all(True)
-        if not self.source: self.btn_post_editing_mode.hide()
-        else: self.btn_post_editing_mode.show()
-
-
-        self.table.set_col_spacings(5)
-        self.table.set_row_spacings(5)
-        self.table.set_homogeneous(False)
-
-        return self.table
 
     def _clean_table(self):
         children = self.table.get_children();
@@ -346,7 +323,11 @@ class Table:
         cell.set_cursor_visible(editable)
         cellTextBuffer = cell.get_buffer()
         index = row_index + self.tables_content[self.table_index]
-        text = textwrap.fill(self.tables_content[text_line_type][index].rstrip('\n'), width=40)
+
+        max_width = 30
+        if self.monolingual: max_width = 40
+        text = textwrap.fill(self.tables_content[text_line_type][index].rstrip('\n'), width=max_width)
+
         cellTextBuffer.set_text(text)
         cellTextBuffer.create_tag("#F8CBCB",background="#F8CBCB")
         cellTextBuffer.create_tag("#A6F3A6",background="#A6F3A6")
@@ -462,11 +443,15 @@ class Table:
         self.create_diff(self.tables_content[self.reference_text_views],"green")
 
     def _move_in_table(self, ammount_of_lines_to_move, feel_free_to_change_the_buttons = True):
+        #if not self.tables_content[self.initialized]:
+            #self.tables_content[self.initialized] = True
+            #self._fill_table()
         if not self.tables_content[self.initialized]:
+            self._clean_table()
             self.tables_content[self.initialized] = True
             self._fill_table()
-
-        self._clean_table()
+        else:
+            self._clean_table()
         if ammount_of_lines_to_move > 0 or self.tables_content[self.table_index] > 0:
              self.tables_content[self.table_index] += ammount_of_lines_to_move
         if self.tables_content[self.table_index] == 0:

@@ -1031,7 +1031,13 @@ class MyWindow(Gtk.Window):
         self.post_editing_source.set_no_show_all(True)
         self.post_editing_source_button.set_no_show_all(True)
         self.post_editing_source_label.set_no_show_all(True)
-        self.toggle_bilingual(None)
+
+        visibility = self.btn_check_bilingual.get_active()
+        self.choosed_bilingual_post_editing_mode = visibility
+        self.post_editing_source_label.set_visible(visibility)
+        self.post_editing_source.set_visible(visibility)
+        self.post_editing_source_button.set_visible(visibility)
+        self.post_editing_source_label.set_visible(visibility)
 
         self.notebook.show_all()
 
@@ -1042,14 +1048,13 @@ class MyWindow(Gtk.Window):
         self.post_editing_source.set_visible(visibility)
         self.post_editing_source_button.set_visible(visibility)
         self.post_editing_source_label.set_visible(visibility)
+        self._check_if_both_files_are_choosen_post_edition(None)
 
     def _check_if_both_files_are_choosen_post_edition(self, object, file_type=""):
         if file_type  == "source": self.post_editing_source_text = self.post_editing_source.get_text()
         if file_type  == "reference": self.post_editing_reference_text = self.post_editing_reference.get_text()
-        if self.output_directory:
-            if ((self.post_editing_source.get_text()
-            and self.post_editing_reference.get_text())
-            or not self.btn_check_bilingual.get_active()):
+        if self.output_directory and self.post_editing_reference.get_text():
+            if (self.post_editing_source.get_text() or not self.btn_check_bilingual.get_active()):
                 post_editing_source_text = self.post_editing_source.get_text()
                 post_editing_reference_text = self.post_editing_reference.get_text()
                 self._set_post_editing()
@@ -1060,7 +1065,8 @@ class MyWindow(Gtk.Window):
                     post_editing_reference_text,  # so that it can read the reference file
                     self.notebook,  # so that it can add the diff tab when needed
                     self.postEdition_grid, # so that it can add search entry and table
-                    self.output_directory) # so that it can save files on the output directory
+                    self.output_directory,# so that it can save files on the output directory
+                    self.btn_check_bilingual.get_active()) # so that it knows wether to render a monolingual or bilingual table
 
     def gtk_change_visuals(self, light_option="unchanged", theme="unchanged"):
         if Gtk.MAJOR_VERSION >= 3 and Gtk.MINOR_VERSION >= 14:
