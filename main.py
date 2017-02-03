@@ -541,8 +541,6 @@ class MyWindow(Gtk.Window):
             self.evaluation_output.set_text(self.output_directory)
 
         dialog.destroy()
-        if command == "change output directory and maybe create post edition table":
-            self._check_if_both_files_are_choosen_post_edition(None, "")
 
 
     def _add_dir_filters(self, dialog):
@@ -944,7 +942,6 @@ class MyWindow(Gtk.Window):
                               self.evaluation_source.get_text(),
                               self.evaluation_reference.get_text())
             evaluation_output_filename = self.evaluation_output.get_text()+"/evaluation_output.txt"
-            print evaluation_output_filename
             f = open(evaluation_output_filename, 'w')
             f.write(result)
             f.close()
@@ -1000,8 +997,6 @@ class MyWindow(Gtk.Window):
         self.post_editing_source_button = Gtk.Button("Choose File")
         self.post_editing_source_button.connect("clicked", self._on_file_clicked, self.post_editing_source)
         self.postEditing_file_menu_grid.attach_next_to(self.post_editing_source_button, self.post_editing_reference_button, Gtk.PositionType.BOTTOM, 1, 10)
-        self.post_editing_reference.connect("changed", self._check_if_both_files_are_choosen_post_edition, "reference")
-        self.post_editing_source.connect("changed", self._check_if_both_files_are_choosen_post_edition, "source")
 
         #  Post Editing: Output Text Picker
         ot_label = Gtk.Label("Output Directory")
@@ -1017,10 +1012,16 @@ class MyWindow(Gtk.Window):
         ot_button.connect("clicked",
                                self._on_dir_clicked,
                                self.post_editing_output,
-                               "change output directory and maybe create post edition table")
+                               "change output directory")
         self.postEditing_file_menu_grid.attach_next_to(ot_button,
                                    self.post_editing_source_button,
                                    Gtk.PositionType.BOTTOM, 1, 10)
+
+        # Start corpus preprocessing button.
+        startPostEdition_btn = Gtk.Button(label="Start corpus preprocessing")
+        startPostEdition_btn.connect("clicked", self._check_if_both_files_are_choosen_post_edition)
+        # self.preparation.set_border_width(10)
+        self.postEditing_file_menu_grid.attach_next_to(startPostEdition_btn,ot_label, Gtk.PositionType.BOTTOM, 3, 1)
 
 
         self.postEdition_grid.add(self.postEditing_file_menu_grid)
@@ -1047,11 +1048,10 @@ class MyWindow(Gtk.Window):
         self.post_editing_source.set_visible(visibility)
         self.post_editing_source_button.set_visible(visibility)
         self.post_editing_source_label.set_visible(visibility)
-        self._check_if_both_files_are_choosen_post_edition(None)
+    def _check_if_both_files_are_choosen_post_edition(self, object):
+        self.post_editing_source_text = self.post_editing_source.get_text()
+        self.post_editing_reference_text = self.post_editing_reference.get_text()
 
-    def _check_if_both_files_are_choosen_post_edition(self, object, file_type=""):
-        if file_type  == "source": self.post_editing_source_text = self.post_editing_source.get_text()
-        if file_type  == "reference": self.post_editing_reference_text = self.post_editing_reference.get_text()
         if self.output_directory and self.post_editing_reference.get_text():
             if (self.post_editing_source.get_text() or not self.btn_check_bilingual.get_active()):
                 post_editing_source_text = self.post_editing_source.get_text()
