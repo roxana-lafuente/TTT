@@ -807,7 +807,7 @@ class MyWindow(Gtk.Window):
         inside_grid = Gtk.Grid()
         texts_menu_frame = Gtk.Frame(label="Evaluation")
         # Evaluation Metrics: Source Text Picker
-        st_label = Gtk.Label("Source text")
+        st_label = Gtk.Label(" Machine translation")
         inside_grid.add(st_label)
         self.evaluation_source = Gtk.Entry()
         self.evaluation_source.set_text("")
@@ -819,7 +819,7 @@ class MyWindow(Gtk.Window):
         inside_grid.add(self.st_button)
 
         #  Evaluation Metrics: Reference Text Picker
-        tt_label = Gtk.Label("Reference text")
+        tt_label = Gtk.Label("Reference")
         inside_grid.attach_next_to(tt_label,
                                    st_label,
                                    Gtk.PositionType.BOTTOM, 1, 10)
