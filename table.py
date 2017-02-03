@@ -58,7 +58,9 @@ class Table:
         self.last_segment_changed = -1
 
         self.modified_references =  []
-        self.last_cell_focused = None
+        self.last_cell_focused_source = None
+        self.last_cell_focused_unedited_reference = None
+        self.last_cell_focused_reference = None
         self.last_cell_focused_index = -1
 
         table = Gtk.Table(1,1, True)
@@ -185,14 +187,26 @@ class Table:
         if tag is None: text_buffer.create_tag(color,background=color); tag = tagtable.lookup(color)
         text_buffer.apply_tag(tag, match_start, match_end)
 
+    def change_last_focused_row_background_color(self, color):
+        self.last_cell_focused_source.override_background_color(Gtk.StateFlags.NORMAL, color)
+        self.last_cell_focused_reference.override_background_color(Gtk.StateFlags.NORMAL, color)
+        if not self.monolingual:
+            self.last_cell_focused_unedited_reference.override_background_color(Gtk.StateFlags.NORMAL, color)
+
     def cell_in_translation_table_is_being_focused(self, a, b, segment_index):
-        if self.last_cell_focused is not None:
+        if self.last_cell_focused_reference is not None:
             if self.last_cell_focused_index in self.translation_reference_text_TextViews_modified_flag.keys():
-                self.last_cell_focused.override_background_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(0.7, 249, 249, 240))
+                self.change_last_focused_row_background_color(Gdk.RGBA(0.7, 249, 249, 240))
             else:
-                self.last_cell_focused.override_background_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
-        self.last_cell_focused = self.tables_content[self.reference_text_views][segment_index]
-        self.last_cell_focused.override_background_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(0.9, 1, 1, 1))
+                self.change_last_focused_row_background_color(Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
+
+        self.last_cell_focused_source = self.tables_content[self.source_text_views][segment_index]
+        if not self.monolingual:
+            self.last_cell_focused_unedited_reference = self.tables_content[self.bilingual_reference_text_views][segment_index]
+        self.last_cell_focused_reference = self.tables_content[self.reference_text_views][segment_index]
+
+        self.change_last_focused_row_background_color(Gdk.RGBA(0.9, 1, 1, 1))
+
         self.last_cell_focused_index = segment_index
 
     def cell_in_translation_table_changed(self, text_buffer_object, segment_index):
