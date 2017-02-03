@@ -66,21 +66,13 @@ class Table:
         self.table.set_col_spacings(5)
         self.table.set_row_spacings(5)
         self.table.set_homogeneous(False)
+        self.table.set_hexpand(True)
+        self.table.set_vexpand(True)
+        self.tab_grid.attach(self.table, 0, 1, 2,1)
 
         self._constants_initializing()
         self.make_table_interface()
         self.update_table()
-
-        # Post Editing: Table
-        #search_frame = Gtk.Frame()
-        #self.table_scroll_window = Gtk.ScrolledWindow()
-        #self.table_scroll_window.set_hexpand(True)
-        #self.table_scroll_window.set_vexpand(True)
-        #self.table_scroll_window.add(self.table)
-        #search_frame.add(self.table_scroll_window)
-        self.table.set_hexpand(True)
-        self.table.set_vexpand(True)
-        self.tab_grid.attach(self.table, 0, 1, 2,1)
 
         # Post Editing: Term Search
         table_frame = Gtk.Frame()
