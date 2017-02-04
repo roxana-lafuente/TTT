@@ -190,8 +190,8 @@ class Table:
     def change_last_focused_row_background_color(self, color):
         self.last_cell_focused_source.override_background_color(Gtk.StateFlags.NORMAL, color)
         self.last_cell_focused_reference.override_background_color(Gtk.StateFlags.NORMAL, color)
-        if not self.monolingual:
-            self.last_cell_focused_unedited_reference.override_background_color(Gtk.StateFlags.NORMAL, color)
+        #if not self.monolingual:
+            #self.last_cell_focused_unedited_reference.override_background_color(Gtk.StateFlags.NORMAL, color)
 
     def cell_in_translation_table_is_being_focused(self, a, b, segment_index):
         if self.last_cell_focused_reference is not None:
@@ -201,8 +201,8 @@ class Table:
                 self.change_last_focused_row_background_color(Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
 
         self.last_cell_focused_source = self.tables_content[self.source_text_views][segment_index]
-        if not self.monolingual:
-            self.last_cell_focused_unedited_reference = self.tables_content[self.bilingual_reference_text_views][segment_index]
+        #if not self.monolingual:
+            #self.last_cell_focused_unedited_reference = self.tables_content[self.bilingual_reference_text_views][segment_index]
         self.last_cell_focused_reference = self.tables_content[self.reference_text_views][segment_index]
 
         self.change_last_focused_row_background_color(Gdk.RGBA(0.9, 1, 1, 1))
@@ -302,24 +302,24 @@ class Table:
                 self.table.remove(element)
         #re-attach the source and target labels
         if self.monolingual:
-            source_label = Gtk.Label("Unedited MT")
+            source_label = Gtk.Label("Raw MT")
             self.table.attach(source_label, 1, 1+1, 0, 1+0)
             source_label.show()
 
-            target_label = Gtk.Label("Edited MT")
+            target_label = Gtk.Label("Post-edited MT")
             self.table.attach(target_label, 3, 3+1, 0, 1+0)
             target_label.show()
 
         else:
-            source_label = Gtk.Label("Original")
+            source_label = Gtk.Label("Source")
             self.table.attach(source_label, 1, 1+1, 0, 1+0)
             source_label.show()
 
-            non_modified_target_label = Gtk.Label("Non Edited MT")
-            self.table.attach(non_modified_target_label, 2, 2+1, 0, 1+0)
-            non_modified_target_label.show()
+            #non_modified_target_label = Gtk.Label("Non Edited MT")
+            #self.table.attach(non_modified_target_label, 2, 2+1, 0, 1+0)
+            #non_modified_target_label.show()
 
-            modified_target_label = Gtk.Label("Edited MT")
+            modified_target_label = Gtk.Label("Postedited MT")
             self.table.attach(modified_target_label, 3, 3+1, 0, 1+0)
             modified_target_label.show()
 
@@ -408,7 +408,7 @@ class Table:
                     self.create_cell(self.reference_text_lines, self.reference_text_views, row_index, True)
                 elif self.table_type == "translation_table" and not self.monolingual:
                     self.create_cell(self.source_text_lines, self.source_text_views, row_index, False)
-                    self.create_cell(self.unedited_reference_text_lines, self.bilingual_reference_text_views, row_index, False)
+                    #self.create_cell(self.unedited_reference_text_lines, self.bilingual_reference_text_views, row_index, False)
                     self.create_cell(self.reference_text_lines, self.reference_text_views, row_index, True)
                 elif self.table_type == "diff_table":
                     self.create_cell(self.source_text_lines, self.source_text_views, row_index, False)
