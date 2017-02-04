@@ -258,14 +258,6 @@ class PostEditing:
             text_file.close()
         savefile('\n'.join(self.tables["translation_table"].tables_content[self.tables["translation_table"].source_text_lines]), self.saved_origin_filepath)
 
-    def load_source_log(self):
-        jsonlog = {}
-        try:
-            with open(self.source_log_filepath) as json_data:
-                jsonlog= json.load(json_data)
-        except: open(self.source_log_filepath, 'w').close()
-        return jsonlog
-
     def save_using_log(self):
         text_lines_to_save = self.tables["translation_table"].reference_text_lines
 

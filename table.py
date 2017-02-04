@@ -431,7 +431,7 @@ class Table:
             except IndexError:
                 self.next_button.set_visible(False)
     def get_latest_modifications (self):
-        source_log = self.load_source_log()
+        source_log = self.load_log()
         last_modifications = {}
 
         for a in sorted(source_log.keys()):
@@ -504,7 +504,7 @@ class Table:
     def _search_button_action(self, button, line_index):
         self._move_in_table(line_index - self.tables_content[self.table_index] - 1)
 
-    def load_source_log(self):
+    def load_log(self):
         jsonlog = {}
         source_log_filepath = self.output_directory + '/source_log.json'
         try:
