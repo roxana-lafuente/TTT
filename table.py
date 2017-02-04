@@ -346,9 +346,7 @@ class Table:
         cellTextBuffer = cell.get_buffer()
         index = row_index + self.tables_content[self.table_index]
 
-        max_width = 30
-        if self.monolingual: max_width = 40
-        text = textwrap.fill(self.tables_content[text_line_type][index].rstrip('\n'), width=max_width)
+        text = textwrap.fill(self.tables_content[text_line_type][index].rstrip('\n'), width=30)
 
         cellTextBuffer.set_text(text)
         cellTextBuffer.create_tag("#F8CBCB",background="#F8CBCB")
