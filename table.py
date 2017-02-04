@@ -70,7 +70,7 @@ class Table:
         self.table.set_homogeneous(False)
         self.table.set_hexpand(True)
         self.table.set_vexpand(True)
-        self.tab_grid.attach(self.table, 0, 1, 2,1)
+        self.tab_grid.attach(self.table, 0, 2, 2,1)
 
         self._constants_initializing()
         self.make_table_interface()
@@ -83,7 +83,7 @@ class Table:
         term_search_frame = Gtk.Frame(label="Term Search")
         term_search_entry = Gtk.Entry()
         term_search_frame.add(term_search_entry)
-        self.tab_grid.add(term_search_frame)
+        self.tab_grid.attach(term_search_frame,2,1,1,1)
         term_search_entry.connect("changed", self.search_and_mark_wrapper)
         self.search_results_scroll_window.add(self.search_buttons_table)
         table_frame.add(self.search_results_scroll_window)
@@ -91,15 +91,22 @@ class Table:
 
 
     def make_table_interface(self):
+
+          table_interface_frame = Gtk.Frame()
+          table_interface_grid = Gtk.Grid()
+
           self.back_button = Gtk.Button("Back")
-          self.tables_content[self.get_menu_grid].add(self.back_button)
           self.next_button = Gtk.Button("Next")
-          self.tables_content[self.get_menu_grid].attach_next_to(self.next_button, self.back_button, Gtk.PositionType.RIGHT, 1, 1)
           self.reduce_rows_translation_table = Gtk.Button("- rows")
-          self.tables_content[self.get_menu_grid].attach_next_to(self.reduce_rows_translation_table, self.back_button, Gtk.PositionType.TOP, 1, 10)
           self.increase_rows_translation_table = Gtk.Button("+ rows")
-          self.tables_content[self.get_menu_grid].attach_next_to(self.increase_rows_translation_table, self.next_button, Gtk.PositionType.TOP, 1, 10)
-          self.tables_content[self.get_menu_grid].set_column_spacing(10)
+          table_interface_grid.add(self.back_button)
+          table_interface_grid.attach_next_to(self.next_button, self.back_button, Gtk.PositionType.RIGHT, 1, 1)
+          table_interface_grid.attach_next_to(self.reduce_rows_translation_table, self.next_button, Gtk.PositionType.RIGHT, 1, 1)
+          table_interface_grid.attach_next_to(self.increase_rows_translation_table, self.reduce_rows_translation_table, Gtk.PositionType.RIGHT, 1, 1)
+          table_interface_grid.set_column_spacing(10)
+
+          table_interface_frame.add(table_interface_grid)
+          self.tab_grid.attach(table_interface_frame,0,1,1,1)
 
           self.increase_rows_translation_table.connect("clicked", self._increase_table_rows)
           self.reduce_rows_translation_table.connect("clicked", self._reduce_table_rows)
@@ -109,13 +116,13 @@ class Table:
           if self.table_type == "translation_table":
             #Add save buttons
             self.REC_button = Gtk.CheckButton.new_with_label("Autosave")
-            self.tables_content[self.get_menu_grid].attach_next_to(self.REC_button, self.increase_rows_translation_table, Gtk.PositionType.RIGHT, 1, 50)
+            self.tables_content[self.get_save_menu_grid].add(self.REC_button)
 
             self.save_post_editing_changes_button = Gtk.Button()
             self.save_post_editing_changes_button.set_image(Gtk.Image(stock=Gtk.STOCK_SAVE))
             self.save_post_editing_changes_button.set_label("Save changes")
             self.save_post_editing_changes_button.connect("clicked", self.save_callback_function)
-            self.tables_content[self.get_menu_grid].attach(self.save_post_editing_changes_button, 3, 0, 1 ,1)
+            self.tables_content[self.get_save_menu_grid].attach(self.save_post_editing_changes_button, 3, 0, 1 ,1)
             self.save_post_editing_changes_button.hide()
 
 
@@ -123,25 +130,25 @@ class Table:
             self.deletions_statistics_button = Gtk.Button()
             self.deletions_statistics_button.set_label("deletions stats")
             self.deletions_statistics_button.connect("clicked", self.stats_callback_function, "deletions")
-            self.tables_content[self.get_menu_grid].attach_next_to(self.deletions_statistics_button, self.save_post_editing_changes_button, Gtk.PositionType.TOP, 1, 1)
+            self.tables_content[self.get_stats_diff_menu_grid].add(self.deletions_statistics_button)
             self.deletions_statistics_button.hide()
 
             self.insertions_statistics_button = Gtk.Button()
             self.insertions_statistics_button.set_label("insertions stats")
             self.insertions_statistics_button.connect("clicked", self.stats_callback_function, "insertions")
-            self.tables_content[self.get_menu_grid].attach_next_to(self.insertions_statistics_button, self.deletions_statistics_button, Gtk.PositionType.TOP, 1, 1)
+            self.tables_content[self.get_stats_diff_menu_grid].attach_next_to(self.insertions_statistics_button, self.deletions_statistics_button, Gtk.PositionType.TOP, 1, 1)
             self.insertions_statistics_button.hide()
 
             self.time_statistics_button = Gtk.Button()
             self.time_statistics_button.set_label("time spent per segment")
             self.time_statistics_button.connect("clicked", self.stats_callback_function, "time_per_segment")
-            self.tables_content[self.get_menu_grid].attach_next_to(self.time_statistics_button, self.insertions_statistics_button, Gtk.PositionType.TOP, 1, 1)
+            self.tables_content[self.get_stats_diff_menu_grid].attach_next_to(self.time_statistics_button, self.insertions_statistics_button, Gtk.PositionType.TOP, 1, 1)
             self.time_statistics_button.hide()
 
             self.statistics_button = Gtk.Button()
             self.statistics_button.set_label("statistics")
             self.statistics_button.connect("clicked", self.stats_callback_function, "statistics_in_general")
-            self.tables_content[self.get_menu_grid].attach_next_to(self.statistics_button, self.time_statistics_button, Gtk.PositionType.TOP, 1, 1)
+            self.tables_content[self.get_stats_diff_menu_grid].attach_next_to(self.statistics_button, self.time_statistics_button, Gtk.PositionType.TOP, 1, 1)
             self.statistics_button.hide()
 
 
@@ -277,20 +284,34 @@ class Table:
         self.reference_text_views,
         self.bilingual_reference_text_views,
         self.rows_ammount,
-        self.get_menu_grid,
-        self.initialized) = range(10)
-        #source_text_lines,unedited_reference_text_lines, reference_text_lines, table_index, source_text_views, reference_text_views, bilingual_reference_text_views, rows_ammount, get_menu_grid, initialized
-        self.tables_content = [[],[],[],0,{},{},{}, 0, None, False]
-        self.tables_content[self.rows_ammount] = 5
+        self.get_stats_diff_menu_grid,
+        self.get_save_menu_grid,
+        self.initialized) = range(11)
+        #source_text_lines,unedited_reference_text_lines, reference_text_lines, table_index, source_text_views, reference_text_views, bilingual_reference_text_views, rows_ammount, get_stats_diff_menu_grid, initialized
+        self.tables_content = [None] * 11
+        self.tables_content [self.source_text_lines] = []
+        self.tables_content [self.unedited_reference_text_lines] = []
+        self.tables_content [self.reference_text_lines] = []
+        self.tables_content [self.table_index] = 0
+        self.tables_content [self.source_text_views] = {}
+        self.tables_content [self.reference_text_views] = {}
+        self.tables_content [self.bilingual_reference_text_views] = {}
+        self.tables_content [self.rows_ammount] = 5
+        self.tables_content [self.get_stats_diff_menu_grid] = None
+        self.tables_content [self.get_save_menu_grid] = None
+        self.tables_content [self.initialized] = False
         self.search_buttons_array = []
 
         if self.table_type == "translation_table":
             self.translation_reference_text_TextViews_modified_flag = {}
-            self.tables_content[self.get_menu_grid] = Gtk.Grid()
-            self.tab_grid.add(self.tables_content[self.get_menu_grid])
-        elif self.table_type == "diff_table":
-            self.tables_content[self.get_menu_grid] = Gtk.Grid()
-            self.tab_grid.add(self.tables_content[self.get_menu_grid])
+            frame = Gtk.Frame()
+            self.tables_content[self.get_stats_diff_menu_grid] = Gtk.Grid()
+            frame.add(self.tables_content[self.get_stats_diff_menu_grid])
+            self.tab_grid.attach(frame,1,0,1,1)
+            frame = Gtk.Frame()
+            self.tables_content[self.get_save_menu_grid] = Gtk.Grid()
+            frame.add(self.tables_content[self.get_save_menu_grid])
+            self.tab_grid.attach(frame,1,1,1,1)
 
         self.search_buttons_table = Gtk.Table(1,1, True)
 

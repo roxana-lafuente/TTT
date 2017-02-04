@@ -969,8 +969,8 @@ class MyWindow(Gtk.Window):
         self.postEdition_grid.set_column_spacing(20)
 
         #  Post Editing Frame.
+        PE_files_settings_frame = Gtk.Frame(label="")
         self.postEditing_file_menu_grid = Gtk.Grid()
-        texts_menu_frame = Gtk.Frame(label="Post-Editing")
         # Post Editing : Source Text Picker
         self.post_editing_reference_label = Gtk.Label("Select MT file")
         self.postEditing_file_menu_grid.add(self.post_editing_reference_label)
@@ -1023,8 +1023,10 @@ class MyWindow(Gtk.Window):
         # self.preparation.set_border_width(10)
         self.postEditing_file_menu_grid.attach_next_to(startPostEdition_btn,ot_label, Gtk.PositionType.BOTTOM, 3, 1)
 
+        PE_files_settings_frame.add(self.postEditing_file_menu_grid)
+        self.postEdition_grid.add(PE_files_settings_frame)
 
-        self.postEdition_grid.add(self.postEditing_file_menu_grid)
+        #self.postEdition_grid.add(self.postEditing_file_menu_grid)
         self.preparation.pack_start(self.postEdition_grid, expand=True, fill=True, padding =0)
         self.notebook.insert_page(self.preparation, Gtk.Label('Post Editing'), 4)
         self.post_editing_source_label.set_no_show_all(True)
