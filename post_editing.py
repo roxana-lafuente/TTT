@@ -199,6 +199,7 @@ class PostEditing:
         return ','.join(pie_as_json_string_list)
 
     def calculate_statistics_event(self, button, statistics_name):
+            self.saveChangedFromPostEditing()
             self.calculate_statistics(statistics_name)
             self.notebook.set_current_page(6)
     def calculate_statistics(self, statistics_name):
