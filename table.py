@@ -203,9 +203,8 @@ class Table:
                 self.change_last_focused_row_background_color(Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
 
         self.last_cell_focused_source = self.tables_content[self.source_text_views][segment_index]
-        #if not self.monolingual:
-            #self.last_cell_focused_unedited_reference = self.tables_content[self.bilingual_reference_text_views][segment_index]
         self.last_cell_focused_reference = self.tables_content[self.reference_text_views][segment_index]
+        #if not self.monolingual: self.last_cell_focused_unedited_reference = self.tables_content[self.bilingual_reference_text_views][segment_index]
 
         self.change_last_focused_row_background_color(Gdk.RGBA(0.9, 1, 1, 1))
 
@@ -227,6 +226,7 @@ class Table:
         text = fix_text(text_buffer_object.get_text(text_buffer_object.get_start_iter(),text_buffer_object.get_end_iter(),True) )
         self.tables_content[self.reference_text_lines][segment_index] = text
         self.translation_reference_text_TextViews_modified_flag[segment_index] = text
+        self.tables_content[self.source_text_views][segment_index].override_background_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(0.7, 249, 249, 240))
         self.tables_content[self.reference_text_views][segment_index].override_background_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(0.7, 249, 249, 240))
 
     def _fill_table(self):
