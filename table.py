@@ -299,7 +299,7 @@ class Table:
 
         if self.table_type == "translation_table":
             self.translation_reference_text_TextViews_modified_flag = {}
-            frame = Gtk.Frame()
+            frame = Gtk.Frame(label="statistics")
             self.tables_content[self.get_stats_diff_menu_grid] = Gtk.Grid()
             frame.add(self.tables_content[self.get_stats_diff_menu_grid])
             self.tab_grid.attach(frame,1,0,1,1)
