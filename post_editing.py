@@ -90,7 +90,6 @@ class PostEditing:
         self.notebook = notebook
         self.modified_references =  []
         self.saved_modified_references = []
-        self.visibility_of_statistics_menu = True
         self.output_directory = output_directory
         self.bilingual = bilingual
 
@@ -118,7 +117,6 @@ class PostEditing:
 
         self.translation_tab_grid.show_all()
         self.tables["translation_table"].save_post_editing_changes_button.hide()
-        self.tables["translation_table"].statistics_button.hide()
         self.tables["translation_table"].insertions_statistics_button.hide()
         self.tables["translation_table"].deletions_statistics_button.hide()
         self.tables["translation_table"].time_statistics_button.hide()
@@ -201,11 +199,6 @@ class PostEditing:
         return ','.join(pie_as_json_string_list)
 
     def calculate_statistics_event(self, button, statistics_name):
-        self.visibility_of_statistics_menu = not self.visibility_of_statistics_menu
-        if statistics_name == "statistics_in_general":
-            self.show_the_available_stats(self.visibility_of_statistics_menu)
-        else:
-            self.show_the_available_stats(False)
             self.calculate_statistics(statistics_name)
             self.notebook.set_current_page(6)
     def calculate_statistics(self, statistics_name):
@@ -237,30 +230,20 @@ class PostEditing:
         self.notebook.show_all()
         if maybe_show_buttons:
             self.show_the_available_stats()
-        else:
-            self.tables["translation_table"].insertions_statistics_button.hide()
-            self.tables["translation_table"].deletions_statistics_button.hide()
-            self.tables["translation_table"].time_statistics_button.hide()
 
-    def show_the_available_stats(self, visibility_of_statistics_menu = True):
+    def show_the_available_stats(self):
         #if the json string is empty, then no calculations have been made
         #and so the buttons should not be shown
         insertions =  self.calculate_insertions_per_segment()[0]
         deletions = self.calculate_deletions_per_segment()[0]
         time = self.calculate_time_per_segment()[0]
 
-        if not visibility_of_statistics_menu:
-            self.tables["translation_table"].insertions_statistics_button.hide()
-            self.tables["translation_table"].deletions_statistics_button.hide()
-            self.tables["translation_table"].time_statistics_button.hide()
-
-        if visibility_of_statistics_menu:
-            if insertions:self.tables["translation_table"].insertions_statistics_button.show()
-            else: self.tables["translation_table"].insertions_statistics_button.hide()
-            if deletions:self.tables["translation_table"].deletions_statistics_button.show()
-            else:self.tables["translation_table"].deletions_statistics_button.hide()
-            if time:self.tables["translation_table"].time_statistics_button.show()
-            else:self.tables["translation_table"].time_statistics_button.hide()
+        if insertions:self.tables["translation_table"].insertions_statistics_button.show()
+        else: self.tables["translation_table"].insertions_statistics_button.hide()
+        if deletions:self.tables["translation_table"].deletions_statistics_button.show()
+        else:self.tables["translation_table"].deletions_statistics_button.hide()
+        if time:self.tables["translation_table"].time_statistics_button.show()
+        else:self.tables["translation_table"].time_statistics_button.hide()
 
 
         if self.tables["translation_table"].REC_button.get_active():
@@ -316,8 +299,7 @@ class PostEditing:
         self.addDifferencesTab()
 
         self.tables["translation_table"].save_post_editing_changes_button.hide()
-        self.visibility_of_statistics_menu = False
-        self.tables["translation_table"].statistics_button.show()
+        self.show_the_available_stats()
 
 
     def preparePostEditingAnalysis_event(self, button):

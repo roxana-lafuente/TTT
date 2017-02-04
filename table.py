@@ -145,11 +145,6 @@ class Table:
             self.tables_content[self.get_stats_diff_menu_grid].attach_next_to(self.time_statistics_button, self.insertions_statistics_button, Gtk.PositionType.TOP, 1, 1)
             self.time_statistics_button.hide()
 
-            self.statistics_button = Gtk.Button()
-            self.statistics_button.set_label("statistics")
-            self.statistics_button.connect("clicked", self.stats_callback_function, "statistics_in_general")
-            self.tables_content[self.get_stats_diff_menu_grid].attach_next_to(self.statistics_button, self.time_statistics_button, Gtk.PositionType.TOP, 1, 1)
-            self.statistics_button.hide()
 
 
 
