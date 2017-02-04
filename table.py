@@ -431,12 +431,12 @@ class Table:
             except IndexError:
                 self.next_button.set_visible(False)
     def get_latest_modifications (self):
-        source_log = self.load_log()
+        log = self.load_log()
         last_modifications = {}
 
-        for a in sorted(source_log.keys()):
-            for b in source_log[a]:
-                last_modifications[b] = source_log[a][b]
+        for a in sorted(log.keys()):
+            for b in log[a]:
+                last_modifications[b] = log[a][b]
         return last_modifications
     def create_diff(self, text_buffers_array, color):
         last_modifications = self.get_latest_modifications()
@@ -506,7 +506,7 @@ class Table:
 
     def load_log(self):
         jsonlog = {}
-        source_log_filepath = self.output_directory + '/source_log.json'
+        source_log_filepath = self.output_directory + '/log.json'
         try:
             with open(source_log_filepath) as json_data:
                 jsonlog = json.load(json_data)

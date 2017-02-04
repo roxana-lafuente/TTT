@@ -24,6 +24,7 @@
 
 #os is one of the modules that I know comes with 2.7, no questions asked.
 import os
+import datetime
 
 try:
     import gi
@@ -90,11 +91,13 @@ class PostEditing:
         self.notebook = notebook
         self.modified_references =  []
         self.saved_modified_references = []
-        self.output_directory = output_directory
+        filename = os.path.splitext(os.path.basename(post_editing_reference))[0]
+        self.output_directory = output_directory + "/"  + filename + "_" + str(datetime.date.today().strftime("%B_%d_%Y"))
+        if not os.path.exists(self.output_directory): os.makedirs(self.output_directory)
         self.bilingual = bilingual
 
         self.tables = {}
-        self.source_log = {}
+        self.log = {}
         self.HTML_view = WebKit.WebView()
         uri = "statistics/generated/stats.html"
         uri = os.path.realpath(uri)
@@ -109,7 +112,7 @@ class PostEditing:
 
         self.tables["translation_table"] =  Table("translation_table",self.post_editing_source,self.post_editing_reference, self.preparePostEditingAnalysis_event,self.preparePostEditingAnalysis, self.calculate_statistics_event, self.translation_tab_grid, self.output_directory, self.bilingual)
 
-        self.source_log_filepath = self.output_directory + '/source_log.json'
+        self.source_log_filepath = self.output_directory + '/log.json'
 
 
         shutil.rmtree("./statistics/generated", ignore_errors=True)
@@ -122,7 +125,7 @@ class PostEditing:
         self.tables["translation_table"].time_statistics_button.hide()
 
     def calculate_time_per_segment(self):
-        if self.source_log.keys():
+        if self.log.keys():
             seconds_spent_by_segment = {}
             percentaje_spent_by_segment = {}
             total_time_spent = 0
@@ -133,13 +136,13 @@ class PostEditing:
                 return itertools.izip(a, b)
 
             now = int(time.time()*1000)
-            myList = sorted(self.source_log.keys())
-            my_source_log = self.source_log
-            my_source_log[now] = self.source_log[myList[-1]]
+            myList = sorted(self.log.keys())
+            my_source_log = self.log
+            my_source_log[now] = self.log[myList[-1]]
 
             #calculate time spent by segment
             for current_timestamp,next_timestamp in pairwise(sorted(my_source_log.keys())):
-                #for current_timestamp,next_timestamp in sorted(self.source_log.keys()):
+                #for current_timestamp,next_timestamp in sorted(self.log.keys()):
                 delta = (int(next_timestamp) - int(current_timestamp))/1000
                 for segment_index in my_source_log[current_timestamp]:
                     if segment_index in seconds_spent_by_segment:
@@ -266,11 +269,11 @@ class PostEditing:
                 modified_reference = self.tables["translation_table"].translation_reference_text_TextViews_modified_flag[index]
                 if modified_reference not in self.saved_modified_references:
                     self.saved_modified_references.append(modified_reference)
-                    if self.last_change_timestamp not in self.source_log:
-                        self.source_log[self.last_change_timestamp] = {}
-                    self.source_log[self.last_change_timestamp][index] = modified_reference
+                    if self.last_change_timestamp not in self.log:
+                        self.log[self.last_change_timestamp] = {}
+                    self.log[self.last_change_timestamp][index] = modified_reference
         with open(self.source_log_filepath, 'w') as outfile:
-            json.dump(self.source_log, outfile)
+            json.dump(self.log, outfile)
 
 
     def saveChangedFromPostEditing(self):
