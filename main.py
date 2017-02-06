@@ -919,7 +919,10 @@ class MyWindow(Gtk.Window):
         files_exists = (is_valid_file(self.evaluation_source.get_text())
                 and is_valid_file(self.evaluation_reference.get_text())
                 and is_valid_dir(self.evaluation_output.get_text()))
-        if fields_filled and files_exists:
+        num_lines_source = sum(1 for line in open(self.evaluation_source.get_text()))
+        num_lines_reference = sum(1 for line in open(self.evaluation_reference.get_text()))
+        equal_ammount_of_lines = num_lines_source == num_lines_reference
+        if fields_filled and files_exists and equal_ammount_of_lines:
             # checkbox_indexes["WER","PER","HTER", "GTM", "BLEU","BLEU2GRAM","BLEU3GRAM"]
             checkbox_indexes = [False] * 8
             if self.check_WER.get_active():
@@ -946,6 +949,8 @@ class MyWindow(Gtk.Window):
             f.write(result)
             f.close()
             self.resultsTextBuffer.set_text(result)
+        if not equal_ammount_of_lines:
+            self.resultsTextBuffer.set_text("ERROR. The files need to have the same ammount of lines.")
         if not fields_filled:
             self.resultsTextBuffer.set_text("ERROR. You need to complete all fields.")
         if not files_exists:
@@ -959,6 +964,7 @@ class MyWindow(Gtk.Window):
     def init_persistent_post_editing_state(self):
         self.post_editing_source_text = ""
         self.post_editing_reference_text = ""
+        self.post_editing_warning_text = ""
         self.choosed_bilingual_post_editing_mode = False
 
     def _set_post_editing(self):
@@ -1019,9 +1025,11 @@ class MyWindow(Gtk.Window):
 
         # Start corpus preprocessing button.
         startPostEdition_btn = Gtk.Button(label="Start Post-editing")
-        startPostEdition_btn.connect("clicked", self._check_if_both_files_are_choosen_post_edition)
+        startPostEdition_btn.connect("clicked", self._check_and_run_post_edition)
         # self.preparation.set_border_width(10)
         self.postEditing_file_menu_grid.attach_next_to(startPostEdition_btn,ot_label, Gtk.PositionType.BOTTOM, 3, 1)
+        self.post_editing_warning_label = Gtk.Label(self.post_editing_warning_text)
+        self.postEditing_file_menu_grid.attach_next_to(self.post_editing_warning_label,startPostEdition_btn, Gtk.PositionType.RIGHT, 1, 1)
 
         PE_files_settings_frame.add(self.postEditing_file_menu_grid)
         self.postEdition_grid.add(PE_files_settings_frame)
@@ -1048,26 +1056,56 @@ class MyWindow(Gtk.Window):
         self.choosed_bilingual_post_editing_mode = visibility
         self.post_editing_source_label.set_visible(visibility)
         self.post_editing_source.set_visible(visibility)
+        self.post_editing_source.set_text("")
         self.post_editing_source_button.set_visible(visibility)
         self.post_editing_source_label.set_visible(visibility)
-    def _check_if_both_files_are_choosen_post_edition(self, object):
+    def _check_and_run_post_edition(self, object):
         self.post_editing_source_text = self.post_editing_source.get_text()
         self.post_editing_reference_text = self.post_editing_reference.get_text()
 
-        if self.output_directory and self.post_editing_reference.get_text():
+        fields_filled = (
+                (self.post_editing_source.get_text() or not self.btn_check_bilingual.get_active())
+                and self.post_editing_reference.get_text()
+                and self.post_editing_output.get_text())
+        files_exists = (
+                (is_valid_file(self.post_editing_source.get_text())  or not self.btn_check_bilingual.get_active())
+                and is_valid_file(self.post_editing_reference.get_text())
+                and is_valid_dir(self.post_editing_output.get_text()))
+
+        self.post_editing_warning_text = ""
+        equal_ammount_of_lines = True
+        if fields_filled and files_exists:
+            self.post_editing_warning_label.set_text("")
             if (self.post_editing_source.get_text() or not self.btn_check_bilingual.get_active()):
-                post_editing_source_text = self.post_editing_source.get_text()
-                post_editing_reference_text = self.post_editing_reference.get_text()
-                self._set_post_editing()
-                self.notebook.set_current_page(4)
-                # binding of the buttons events to the PostEditing methods
-                self.PostEditing = PostEditing(
-                    post_editing_source_text,  # so that it can read the source file
-                    post_editing_reference_text,  # so that it can read the reference file
-                    self.notebook,  # so that it can add the diff tab when needed
-                    self.postEdition_grid, # so that it can add search entry and table
-                    self.output_directory,# so that it can save files on the output directory
-                    self.btn_check_bilingual.get_active()) # so that it knows wether to render a monolingual or bilingual table
+                if self.post_editing_source.get_text():
+                    num_lines_source = sum(1 for line in open(self.post_editing_source_text))
+                    num_lines_reference = sum(1 for line in open(self.post_editing_reference_text))
+                    equal_ammount_of_lines = num_lines_source == num_lines_reference
+                    self.post_editing_warning_label.set_text("The files need to have the same ammount of lines.")
+                if equal_ammount_of_lines:
+                    post_editing_source_text = self.post_editing_source.get_text()
+                    post_editing_reference_text = self.post_editing_reference.get_text()
+                    self._set_post_editing()
+                    self.notebook.set_current_page(4)
+                    # binding of the buttons events to the PostEditing methods
+                    self.PostEditing = PostEditing(
+                        post_editing_source_text,  # so that it can read the source file
+                        post_editing_reference_text,  # so that it can read the reference file
+                        self.notebook,  # so that it can add the diff tab when needed
+                        self.postEdition_grid, # so that it can add search entry and table
+                        self.output_directory,# so that it can save files on the output directory
+                        self.btn_check_bilingual.get_active()) # so that it knows wether to render a monolingual or bilingual table
+
+        if not fields_filled:
+            self.post_editing_warning_label.set_text("ERROR. You need to complete all fields.")
+        elif not files_exists:
+            if not is_valid_file(self.evaluation_source.get_text()):
+                self.post_editing_warning_label.set_text("ERROR. The source file does not exist.")
+            if not is_valid_file(self.evaluation_reference.get_text()):
+                self.post_editing_warning_label.set_text("ERROR. The reference file does not exist.")
+            if not is_valid_dir(self.evaluation_output.get_text()):
+                self.post_editing_warning_label.set_text("ERROR. The output directory is not choosen.")
+
 
     def gtk_change_visuals(self, light_option="unchanged", theme="unchanged"):
         if Gtk.MAJOR_VERSION >= 3 and Gtk.MINOR_VERSION >= 14:
