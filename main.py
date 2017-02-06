@@ -919,9 +919,11 @@ class MyWindow(Gtk.Window):
         files_exists = (is_valid_file(self.evaluation_source.get_text())
                 and is_valid_file(self.evaluation_reference.get_text())
                 and is_valid_dir(self.evaluation_output.get_text()))
-        num_lines_source = sum(1 for line in open(self.evaluation_source.get_text()))
-        num_lines_reference = sum(1 for line in open(self.evaluation_reference.get_text()))
-        equal_ammount_of_lines = num_lines_source == num_lines_reference
+        equal_ammount_of_lines = False
+        if fields_filled and files_exists:
+            num_lines_source = sum(1 for line in open(self.evaluation_source.get_text()))
+            num_lines_reference = sum(1 for line in open(self.evaluation_reference.get_text()))
+            equal_ammount_of_lines = num_lines_source == num_lines_reference
         if fields_filled and files_exists and equal_ammount_of_lines:
             # checkbox_indexes["WER","PER","HTER", "GTM", "BLEU","BLEU2GRAM","BLEU3GRAM"]
             checkbox_indexes = [False] * 8
