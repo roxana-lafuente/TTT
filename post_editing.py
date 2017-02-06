@@ -177,8 +177,6 @@ class PostEditing:
         else:
             segment_source = table_contents[1][segment_index]
             segment_modified = table_contents[2][segment_index]
-        segment_source = segment_source.decode("utf-8").encode("windows-1252").decode("utf-8")
-        segment_modified = segment_modified.decode("utf-8").encode("windows-1252").decode("utf-8")
         id_source = segment_index
         id_target = id_source + 100000
         final_output = '<a href='+ '"' + "javascript:showhide('" +str(id_source)+ "')" + '"' + '><input type="button" value="Source"></a>'
