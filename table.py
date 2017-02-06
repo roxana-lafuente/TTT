@@ -436,6 +436,8 @@ class Table:
 
         for a in sorted(log.keys()):
             for b in log[a]:
+                if isinstance(log[a][b], unicode):
+                    log[a][b] = log[a][b].encode('utf-8')
                 last_modifications[b] = log[a][b]
         return last_modifications
     def create_diff(self, text_buffers_array, color):
