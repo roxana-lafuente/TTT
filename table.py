@@ -115,15 +115,15 @@ class Table:
 
           if self.table_type == "translation_table":
             #Add save buttons
-            self.REC_button = Gtk.CheckButton.new_with_label("Autosave")
-            self.tables_content[self.get_save_menu_grid].add(self.REC_button)
-
             self.save_post_editing_changes_button = Gtk.Button()
             self.save_post_editing_changes_button.set_image(Gtk.Image(stock=Gtk.STOCK_SAVE))
             self.save_post_editing_changes_button.set_label("Save changes")
             self.save_post_editing_changes_button.connect("clicked", self.save_callback_function)
-            self.tables_content[self.get_save_menu_grid].attach(self.save_post_editing_changes_button, 3, 0, 1 ,1)
+            self.tables_content[self.get_save_menu_grid].add(self.save_post_editing_changes_button)
             self.save_post_editing_changes_button.hide()
+            self.REC_button = Gtk.CheckButton.new_with_label("Autosave")
+            self.REC_button.connect("clicked", lambda z: self.save_post_editing_changes_button.show())
+            self.tables_content[self.get_save_menu_grid].attach(self.REC_button, 3, 0, 1 ,1)
 
 
 
