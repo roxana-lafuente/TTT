@@ -539,6 +539,7 @@ class MyWindow(Gtk.Window):
             self.output_directory = dialog.get_filename()
             self.post_editing_output.set_text(self.output_directory)
             self.evaluation_output.set_text(self.output_directory)
+            self.mt_output.set_text(self.output_directory)
 
         dialog.destroy()
 
@@ -706,11 +707,31 @@ class MyWindow(Gtk.Window):
                 1,
                 50)
 
+        #  Evaluation Metrics: Output Text Picker
+        ot_label = Gtk.Label("Output Directory")
+        inside_grid.attach_next_to(ot_label,
+                                   mt_in_label,
+                                   Gtk.PositionType.BOTTOM, 1, 10)
+        self.mt_output = Gtk.Entry()
+        self.mt_output.set_text("")
+        inside_grid.attach_next_to(self.mt_output,
+                                   self.mt_in_text,
+                                   Gtk.PositionType.BOTTOM, 1, 10)
+        ot_button = Gtk.Button("Choose Directory")
+        ot_button.connect("clicked",
+                    self._on_dir_clicked,
+                    self.mt_output,
+                    "change output directory")
+
+        inside_grid.attach_next_to(ot_button,
+                        self.mt_in_button,
+                        Gtk.PositionType.BOTTOM, 1, 10)
+
         # Start machine translation button.
         sbutton = Gtk.Button(label="Start machine translation")
         sbutton.connect("clicked", self._machine_translation)
         inside_grid.attach_next_to(sbutton,
-                                   self.mt_in_button,
+                                   ot_button,
                                    Gtk.PositionType.BOTTOM,
                                    1,
                                    10)
@@ -763,10 +784,9 @@ class MyWindow(Gtk.Window):
             output = "ERROR: %s lacks an empty line at the end of the file." % in_file
         else:
             base = os.path.basename(in_file)
-            out_file = os.path.dirname(in_file) + os.path.splitext(base)[0] + "_translated" + os.path.splitext(base)[1]
-
+            out_mt_file = self.mt_output.get_text() + "/" + os.path.splitext(base)[0] + "_translated" + os.path.splitext(base)[1]
             in_file = adapt_path_for_cygwin(self.is_windows, in_file)
-            out_file = adapt_path_for_cygwin(self.is_windows, out_file)
+            out_mt_file = adapt_path_for_cygwin(self.is_windows, out_mt_file)
             output += "Running decoder....\n\n"
             lmdir = self.language_model_directory_entry.get_text()
             if is_valid_dir(lmdir):
@@ -774,14 +794,14 @@ class MyWindow(Gtk.Window):
                 cmd = get_test_command(self.moses_dir,
                                        adapt_path_for_cygwin(self.is_windows, lmdir) + "/train/model/moses.ini",
                                        in_file,
-                                       out_file)
+                                       out_mt_file)
                 # use Popen for non-blocking
                 proc = subprocess.Popen([cmd],
                                         stdout=subprocess.PIPE,
                                         stderr=subprocess.PIPE,
                                         shell=True)
                 (out, err) = proc.communicate()
-                f = open(out_file, 'r')
+                f = open(out_mt_file, 'r')
                 mt_result = f.read()
                 if mt_result == "":
                     if out != "":
