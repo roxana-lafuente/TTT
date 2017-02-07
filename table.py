@@ -428,8 +428,7 @@ class Table:
                     self.create_cell(self.source_text_lines, self.source_text_views, row_index, False)
                     self.create_cell(self.reference_text_lines, self.reference_text_views, row_index, False)
 
-            except IndexError:
-                self.next_button.set_visible(False)
+            except IndexError: pass
     def get_latest_modifications (self):
         log = self.load_log()
         last_modifications = {}
@@ -476,8 +475,6 @@ class Table:
             self._clean_table()
         if ammount_of_lines_to_move > 0 or self.tables_content[self.table_index] > 0:
              self.tables_content[self.table_index] += ammount_of_lines_to_move
-        if self.tables_content[self.table_index] == 0:
-            self.back_button.set_visible(False)
         self.create_cells()
         if self.table_type == "diff_table":
             self.create_diffs()
