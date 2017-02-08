@@ -92,7 +92,7 @@ class PostEditing:
         self.modified_references =  []
         self.saved_modified_references = []
         filename = os.path.splitext(os.path.basename(post_editing_reference))[0]
-        self.output_directory = output_directory + "/"  + filename + "_" + str(datetime.date.today().strftime("%B_%d_%Y"))
+        self.output_directory = output_directory + "/"  + filename + "_" + str(datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S"))
         if not os.path.exists(self.output_directory): os.makedirs(self.output_directory)
         self.bilingual = bilingual
 
