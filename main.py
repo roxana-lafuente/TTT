@@ -692,7 +692,8 @@ class MyWindow(Gtk.Window):
         self.mt_out2_button = Gtk.Button("Choose a Model")
         self.mt_out2_button.connect("clicked",
                                    self._on_dir_clicked,
-                                   self.language_model_directory_entry)
+                                   self.language_model_directory_entry,
+                                   "change output directory")
         inside_grid.attach_next_to(self.mt_out2_button,
                                    self.mt_in_button,
                                    Gtk.PositionType.RIGHT,
