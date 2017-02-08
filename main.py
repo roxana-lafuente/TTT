@@ -405,17 +405,16 @@ class MyWindow(Gtk.Window):
     def _prepare_corpus(self, button):
         """@brief     Runs moses truecaser, tokenizer and cleaner."""
         output = ""
-        win_output_directory = self.language_model_directory_entry.get_text()
-        if self._has_chosen_preprocess_params(win_output_directory):
+        if self._has_chosen_preprocess_params(self.output_directory):
             language_model_directory = adapt_path_for_cygwin(self.is_windows,
-                                                     win_output_directory)
+                                                     self.output_directory)
             # Change directory to the language_model_directory.
             try:
-                os.chdir(win_output_directory)
+                os.chdir(self.output_directory)
             except:
                 # Output directory does not exist.
-                os.mkdir(win_output_directory)
-                os.chdir(win_output_directory)
+                os.mkdir(self.output_directory)
+                os.chdir(self.output_directory)
             cmds = []
             # 1) Tokenization
             # a) Target text
@@ -493,6 +492,9 @@ class MyWindow(Gtk.Window):
                 output += "Output: %s\n%s\n\n\n" % (out, err)
             if all_ok:
                 self.is_corpus_preparation_ready = True
+                with open(self.output_directory + '/lm.ini', 'w') as f:
+                    f.write("source_lang:"+self.source_lang+"\n")
+                    f.write("target_lang:"+self.target_lang+"\n")
         else:
             output += "ERROR. You need to complete all fields."
         self.preprocessResultsTextBuffer.set_text(output)
@@ -777,14 +779,19 @@ class MyWindow(Gtk.Window):
     def _machine_translation(self, button):
         """@brief     Runs the decoder."""
         output = ""
+        target_lang = ""
+        for line in open(self.output_directory + '/lm.ini'):
+            if "target_lang" in line: target_lang = line.split(':')[1]; print line
         in_file = self.mt_in_text.get_text()
         if not is_valid_file(in_file):
             output = "ERROR: %s should be a valid file." % in_file
         elif not self._has_empty_last_line(in_file):
             output = "ERROR: %s lacks an empty line at the end of the file." % in_file
+        elif not target_lang:
+            output = "ERROR: No Language Model could be loaded.\n(A file called lm.ini should be found at the output directory)"
         else:
             base = os.path.basename(in_file)
-            out_mt_file = self.mt_output.get_text() + "/" + os.path.splitext(base)[0] + "_translated" + os.path.splitext(base)[1]
+            out_mt_file = self.output_directory + "/" + os.path.splitext(base)[0] + "_translated." + target_lang.replace('\n','')
             in_file = adapt_path_for_cygwin(self.is_windows, in_file)
             out_mt_file = adapt_path_for_cygwin(self.is_windows, out_mt_file)
             output += "Running decoder....\n\n"
