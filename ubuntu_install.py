@@ -24,7 +24,7 @@ def install_and_import(package):
             import pip
         except ImportError:
             print "no pip"
-            os.system('python get_pip.py')
+            os.system('sudo python get_pip.py')
         finally:
             import pip
         pip.main(['install', package])
