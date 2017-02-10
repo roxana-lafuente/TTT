@@ -85,7 +85,7 @@ is_win = os.name == 'nt'
 tokenizer = adapt_path_for_cygwin(is_win, "%s/scripts/tokenizer/tokenizer.perl ")
 
 truecaser_train = adapt_path_for_cygwin(is_win, "%s/scripts/recaser/train-truecaser.perl ")
-model = adapt_path_for_cygwin(is_win, "%s/truecase-model.en")
+model = adapt_path_for_cygwin(is_win, "%s/truecase-model.%s")
 
 truecaser = adapt_path_for_cygwin(is_win, "%s/scripts/recaser/truecase.perl ")
 

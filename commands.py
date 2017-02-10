@@ -41,20 +41,20 @@ def get_tokenize_command(mdir, language, in_file, out_file, background=False):
                                         amp)
 
 
-def get_truecaser_train_command(mdir, corpus, background=False):
+def get_truecaser_train_command(mdir, odir, lang, corpus, background=False):
     """@brief     Constructs truecaser training command."""
     amp = get_background_command(background)
     return "%s --model %s --corpus %s %s\n" % (truecaser_train % mdir,
-                                               model % mdir,
+                                               model % (odir, lang),
                                                corpus,
                                                amp)
 
 
-def get_truecaser_command(mdir, in_file, out_file, background=False):
+def get_truecaser_command(mdir, odir, lang, in_file, out_file, background=False):
     """@brief     Constructs truecaser command."""
     amp = get_background_command(background)
     return "%s --model %s < %s > %s %s\n" % (truecaser % mdir,
-                                             model % mdir,
+                                             model % (odir, lang),
                                              in_file,
                                              out_file,
                                              amp)

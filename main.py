@@ -441,12 +441,18 @@ class MyWindow(Gtk.Window):
             # 2) Truecaser training
             # a) Target text
             cmds.append(get_truecaser_train_command(adapt_path_for_cygwin(self.is_windows, self.moses_dir),
+                                                    self.output_directory,
+                                                    self.target_lang,
                                                     self.target_tok))
             # b) Source text
             cmds.append(get_truecaser_train_command(adapt_path_for_cygwin(self.is_windows, self.moses_dir),
+                                                    self.output_directory,
+                                                    self.source_lang,
                                                     self.source_tok))
             # c) Language model
             cmds.append(get_truecaser_train_command(adapt_path_for_cygwin(self.is_windows, self.moses_dir),
+                                                    self.output_directory,
+                                                    self.target_lang,
                                                     self.lm_tok))
 
             # 3) Truecaser
@@ -455,17 +461,23 @@ class MyWindow(Gtk.Window):
             self.target_true = generate_input_true_fn(self.target_lang,
                                                       language_model_directory)
             cmds.append(get_truecaser_command(adapt_path_for_cygwin(self.is_windows, self.moses_dir),
+                                              self.output_directory,
+                                              self.target_lang,
                                               self.target_tok,
                                               self.target_true))
             # b) Source text
             self.source_true = generate_input_true_fn(self.source_lang,
                                                       language_model_directory)
             cmds.append(get_truecaser_command(adapt_path_for_cygwin(self.is_windows, self.moses_dir),
+                                              self.output_directory,
+                                              self.source_lang,
                                               self.source_tok,
                                               self.source_true))
             # c) Language model
             self.lm_true = generate_lm_true_fn(language_model_directory)
             cmds.append(get_truecaser_command(adapt_path_for_cygwin(self.is_windows, self.moses_dir),
+                                              self.output_directory,
+                                              self.target_lang,
                                               self.target_tok, self.lm_true))
 
             # 4) Cleaner
