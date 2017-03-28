@@ -1,14 +1,14 @@
 #!/usr/bin/perl
 #
 # sanitycheck.pl
-# $Id: sanitycheck.pl 2 2006-01-25 03:32:06Z turian $
+# $Id: sanitycheck.pl,v 1.4 2003/05/26 13:23:55 turian Exp $
 #
 # Run a sanity check on the program output.
 #
 
 # You may need to change the way the program is invoked:
-$origcmd = "java gtm" and (-e "gtm.class" or die "Invoke make before running this script");
-#$origcmd = "java -jar gtm.jar" and (-e "gtm.jar" or die "gtm.jar not found");
+#$origcmd = "java gtm" and (-e "gtm.class" or die "Invoke make before running this script");
+$origcmd = "java -jar gtm.jar" and (-e "gtm.jar" or die "gtm.jar not found");
 
 ################
 # You won't need to change anything past this point
