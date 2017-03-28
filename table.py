@@ -43,7 +43,7 @@ except ImportError:
 
 
 class Table:
-    def __init__(self, table_type, source, reference, save_callback_function, save_function,  stats_callback_function, tab_grid, output_directory):
+    def __init__(self, table_type, source, reference, save_callback_function, save_function,  stats_callback_function, tab_grid, output_directory, bilingual = False):
         self.save_callback_function = save_callback_function
         self.stats_callback_function = stats_callback_function
         self.save_function = save_function
@@ -52,25 +52,29 @@ class Table:
         self.reference = reference
         self.tab_grid = tab_grid
         self.output_directory = output_directory
+        self.monolingual = not bilingual
 
         self.saved_reference_filepath = ""
         self.last_segment_changed = -1
-        self._table_initializing()
-        self.make_table_interface()
-        self.update_table()
 
         self.modified_references =  []
-        self.last_cell_focused = None
+        self.last_cell_focused_source = None
+        self.last_cell_focused_unedited_reference = None
+        self.last_cell_focused_reference = None
         self.last_cell_focused_index = -1
 
-        # Post Editing: Table
-        search_frame = Gtk.Frame()
-        self.table_scroll_window = Gtk.ScrolledWindow()
-        self.table_scroll_window.set_hexpand(True)
-        self.table_scroll_window.set_vexpand(True)
-        self.table_scroll_window.add(self.table)
-        search_frame.add(self.table_scroll_window)
-        self.tab_grid.attach(search_frame, 0, 1, 2, 1)
+        table = Gtk.Table(1,1, True)
+        self.table = table
+        self.table.set_col_spacings(5)
+        self.table.set_row_spacings(5)
+        self.table.set_homogeneous(False)
+        self.table.set_hexpand(True)
+        self.table.set_vexpand(True)
+        self.tab_grid.attach(self.table, 0, 2, 2,1)
+
+        self._constants_initializing()
+        self.make_table_interface()
+        self.update_table()
 
         # Post Editing: Term Search
         table_frame = Gtk.Frame()
@@ -79,22 +83,30 @@ class Table:
         term_search_frame = Gtk.Frame(label="Term Search")
         term_search_entry = Gtk.Entry()
         term_search_frame.add(term_search_entry)
-        self.tab_grid.add(term_search_frame)
+        self.tab_grid.attach(term_search_frame,2,1,1,1)
         term_search_entry.connect("changed", self.search_and_mark_wrapper)
         self.search_results_scroll_window.add(self.search_buttons_table)
         table_frame.add(self.search_results_scroll_window)
         self.tab_grid.attach_next_to(table_frame, term_search_frame, Gtk.PositionType.BOTTOM, 2, 1)
 
+
     def make_table_interface(self):
+
+          table_interface_frame = Gtk.Frame()
+          table_interface_grid = Gtk.Grid()
+
           self.back_button = Gtk.Button("Back")
-          self.tables_content[self.get_menu_grid].add(self.back_button)
           self.next_button = Gtk.Button("Next")
-          self.tables_content[self.get_menu_grid].attach_next_to(self.next_button, self.back_button, Gtk.PositionType.RIGHT, 1, 1)
           self.reduce_rows_translation_table = Gtk.Button("- rows")
-          self.tables_content[self.get_menu_grid].attach_next_to(self.reduce_rows_translation_table, self.back_button, Gtk.PositionType.TOP, 1, 10)
           self.increase_rows_translation_table = Gtk.Button("+ rows")
-          self.tables_content[self.get_menu_grid].attach_next_to(self.increase_rows_translation_table, self.next_button, Gtk.PositionType.TOP, 1, 10)
-          self.tables_content[self.get_menu_grid].set_column_spacing(10)
+          table_interface_grid.add(self.back_button)
+          table_interface_grid.attach_next_to(self.next_button, self.back_button, Gtk.PositionType.RIGHT, 1, 1)
+          table_interface_grid.attach_next_to(self.reduce_rows_translation_table, self.next_button, Gtk.PositionType.RIGHT, 1, 1)
+          table_interface_grid.attach_next_to(self.increase_rows_translation_table, self.reduce_rows_translation_table, Gtk.PositionType.RIGHT, 1, 1)
+          table_interface_grid.set_column_spacing(10)
+
+          table_interface_frame.add(table_interface_grid)
+          self.tab_grid.attach(table_interface_frame,0,1,1,1)
 
           self.increase_rows_translation_table.connect("clicked", self._increase_table_rows)
           self.reduce_rows_translation_table.connect("clicked", self._reduce_table_rows)
@@ -103,41 +115,36 @@ class Table:
 
           if self.table_type == "translation_table":
             #Add save buttons
-            self.REC_button = Gtk.CheckButton.new_with_label("Autosave")
-            self.tables_content[self.get_menu_grid].attach_next_to(self.REC_button, self.increase_rows_translation_table, Gtk.PositionType.RIGHT, 1, 50)
-
             self.save_post_editing_changes_button = Gtk.Button()
             self.save_post_editing_changes_button.set_image(Gtk.Image(stock=Gtk.STOCK_SAVE))
             self.save_post_editing_changes_button.set_label("Save changes")
             self.save_post_editing_changes_button.connect("clicked", self.save_callback_function)
-            self.tables_content[self.get_menu_grid].attach(self.save_post_editing_changes_button, 3, 0, 1 ,1)
+            self.tables_content[self.get_save_menu_grid].add(self.save_post_editing_changes_button)
             self.save_post_editing_changes_button.hide()
+            self.REC_button = Gtk.CheckButton.new_with_label("Autosave")
+            self.REC_button.connect("clicked", lambda z: self.save_post_editing_changes_button.show())
+            self.tables_content[self.get_save_menu_grid].attach(self.REC_button, 3, 0, 1 ,1)
 
 
 
             self.deletions_statistics_button = Gtk.Button()
             self.deletions_statistics_button.set_label("deletions stats")
             self.deletions_statistics_button.connect("clicked", self.stats_callback_function, "deletions")
-            self.tables_content[self.get_menu_grid].attach_next_to(self.deletions_statistics_button, self.save_post_editing_changes_button, Gtk.PositionType.TOP, 1, 1)
+            self.tables_content[self.get_stats_diff_menu_grid].add(self.deletions_statistics_button)
             self.deletions_statistics_button.hide()
 
             self.insertions_statistics_button = Gtk.Button()
             self.insertions_statistics_button.set_label("insertions stats")
             self.insertions_statistics_button.connect("clicked", self.stats_callback_function, "insertions")
-            self.tables_content[self.get_menu_grid].attach_next_to(self.insertions_statistics_button, self.deletions_statistics_button, Gtk.PositionType.TOP, 1, 1)
+            self.tables_content[self.get_stats_diff_menu_grid].attach_next_to(self.insertions_statistics_button, self.deletions_statistics_button, Gtk.PositionType.TOP, 1, 1)
             self.insertions_statistics_button.hide()
 
             self.time_statistics_button = Gtk.Button()
             self.time_statistics_button.set_label("time spent per segment")
             self.time_statistics_button.connect("clicked", self.stats_callback_function, "time_per_segment")
-            self.tables_content[self.get_menu_grid].attach_next_to(self.time_statistics_button, self.insertions_statistics_button, Gtk.PositionType.TOP, 1, 1)
+            self.tables_content[self.get_stats_diff_menu_grid].attach_next_to(self.time_statistics_button, self.insertions_statistics_button, Gtk.PositionType.TOP, 1, 1)
             self.time_statistics_button.hide()
 
-            self.statistics_button = Gtk.Button()
-            self.statistics_button.set_label("statistics")
-            self.statistics_button.connect("clicked", self.stats_callback_function, "statistics_in_general")
-            self.tables_content[self.get_menu_grid].attach_next_to(self.statistics_button, self.time_statistics_button, Gtk.PositionType.TOP, 1, 1)
-            self.statistics_button.hide()
 
 
 
@@ -182,14 +189,25 @@ class Table:
         if tag is None: text_buffer.create_tag(color,background=color); tag = tagtable.lookup(color)
         text_buffer.apply_tag(tag, match_start, match_end)
 
+    def change_last_focused_row_background_color(self, color):
+        self.last_cell_focused_source.override_background_color(Gtk.StateFlags.NORMAL, color)
+        self.last_cell_focused_reference.override_background_color(Gtk.StateFlags.NORMAL, color)
+        #if not self.monolingual:
+            #self.last_cell_focused_unedited_reference.override_background_color(Gtk.StateFlags.NORMAL, color)
+
     def cell_in_translation_table_is_being_focused(self, a, b, segment_index):
-        if self.last_cell_focused is not None:
+        if self.last_cell_focused_reference is not None:
             if self.last_cell_focused_index in self.translation_reference_text_TextViews_modified_flag.keys():
-                self.last_cell_focused.override_background_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(0.7, 249, 249, 240))
+                self.change_last_focused_row_background_color(Gdk.RGBA(0.7, 249, 249, 240))
             else:
-                self.last_cell_focused.override_background_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
-        self.last_cell_focused = self.tables_content[self.reference_text_views][segment_index]
-        self.last_cell_focused.override_background_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(0.9, 1, 1, 1))
+                self.change_last_focused_row_background_color(Gdk.RGBA(1.0, 1.0, 1.0, 1.0))
+
+        self.last_cell_focused_source = self.tables_content[self.source_text_views][segment_index]
+        self.last_cell_focused_reference = self.tables_content[self.reference_text_views][segment_index]
+        #if not self.monolingual: self.last_cell_focused_unedited_reference = self.tables_content[self.bilingual_reference_text_views][segment_index]
+
+        self.change_last_focused_row_background_color(Gdk.RGBA(0.9, 1, 1, 1))
+
         self.last_cell_focused_index = segment_index
 
     def cell_in_translation_table_changed(self, text_buffer_object, segment_index):
@@ -208,6 +226,7 @@ class Table:
         text = fix_text(text_buffer_object.get_text(text_buffer_object.get_start_iter(),text_buffer_object.get_end_iter(),True) )
         self.tables_content[self.reference_text_lines][segment_index] = text
         self.translation_reference_text_TextViews_modified_flag[segment_index] = text
+        self.tables_content[self.source_text_views][segment_index].override_background_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(0.7, 249, 249, 240))
         self.tables_content[self.reference_text_views][segment_index].override_background_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(0.7, 249, 249, 240))
 
     def _fill_table(self):
@@ -236,8 +255,6 @@ class Table:
                       else:
                           self.tables_content[self.reference_text_lines].append(line.strip())
           else:
-              print self.reference
-              print self.source
               if self.source != "" and self.reference != "":
                   with open(self.source) as fp:
                       for line in fp:
@@ -253,23 +270,7 @@ class Table:
                       else:
                           self.tables_content[self.reference_text_lines].append(line)
 
-
-    def toggle_post_editing_mode(self, button):
-        if self.monolingual:
-            self.btn_post_editing_mode.set_label("Bilingual")
-        if not self.monolingual:
-            self.btn_post_editing_mode.set_label("Monolingual")
-        self.monolingual = not self.monolingual
-        try:
-            #try to save even if there is nothing to be saved, yet.
-            self.save_function()
-        except: pass
-        self.tables_content[self.source_text_lines] = []
-        self.tables_content[self.reference_text_lines] = []
-        self._fill_table()
-        self.update_table()
-
-    def _table_initializing(self):
+    def _constants_initializing(self):
         (self.source_text_lines,
         self.unedited_reference_text_lines,
         self.reference_text_lines,
@@ -278,38 +279,36 @@ class Table:
         self.reference_text_views,
         self.bilingual_reference_text_views,
         self.rows_ammount,
-        self.get_menu_grid,
-        self.initialized) = range(10)
-        #source_text_lines,unedited_reference_text_lines, reference_text_lines, table_index, source_text_views, reference_text_views, bilingual_reference_text_views, rows_ammount, get_menu_grid, initialized
-        self.tables_content = [[],[],[],0,{},{},{}, 0, None, False]
-        self.tables_content[self.rows_ammount] = 5
+        self.get_stats_diff_menu_grid,
+        self.get_save_menu_grid,
+        self.initialized) = range(11)
+        #source_text_lines,unedited_reference_text_lines, reference_text_lines, table_index, source_text_views, reference_text_views, bilingual_reference_text_views, rows_ammount, get_stats_diff_menu_grid, initialized
+        self.tables_content = [None] * 11
+        self.tables_content [self.source_text_lines] = []
+        self.tables_content [self.unedited_reference_text_lines] = []
+        self.tables_content [self.reference_text_lines] = []
+        self.tables_content [self.table_index] = 0
+        self.tables_content [self.source_text_views] = {}
+        self.tables_content [self.reference_text_views] = {}
+        self.tables_content [self.bilingual_reference_text_views] = {}
+        self.tables_content [self.rows_ammount] = 5
+        self.tables_content [self.get_stats_diff_menu_grid] = None
+        self.tables_content [self.get_save_menu_grid] = None
+        self.tables_content [self.initialized] = False
         self.search_buttons_array = []
 
         if self.table_type == "translation_table":
             self.translation_reference_text_TextViews_modified_flag = {}
-            self.tables_content[self.get_menu_grid] = Gtk.Grid()
-            self.tab_grid.add(self.tables_content[self.get_menu_grid])
-        elif self.table_type == "diff_table":
-            self.tables_content[self.get_menu_grid] = Gtk.Grid()
-            self.tab_grid.add(self.tables_content[self.get_menu_grid])
-        table = Gtk.Table(1,1, True)
-        self.table = table
+            frame = Gtk.Frame(label="statistics")
+            self.tables_content[self.get_stats_diff_menu_grid] = Gtk.Grid()
+            frame.add(self.tables_content[self.get_stats_diff_menu_grid])
+            self.tab_grid.attach(frame,1,0,1,1)
+            frame = Gtk.Frame()
+            self.tables_content[self.get_save_menu_grid] = Gtk.Grid()
+            frame.add(self.tables_content[self.get_save_menu_grid])
+            self.tab_grid.attach(frame,1,1,1,1)
+
         self.search_buttons_table = Gtk.Table(1,1, True)
-
-        self.monolingual = True
-        self.btn_post_editing_mode = Gtk.Button("Monolingual")
-        self.btn_post_editing_mode.connect("clicked", self.toggle_post_editing_mode)
-        self.tables_content[self.get_menu_grid].attach(self.btn_post_editing_mode, 2, 2, 30, 3)
-        self.btn_post_editing_mode.set_no_show_all(True)
-        if not self.source: self.btn_post_editing_mode.hide()
-        else: self.btn_post_editing_mode.show()
-
-
-        self.table.set_col_spacings(5)
-        self.table.set_row_spacings(5)
-        self.table.set_homogeneous(False)
-
-        return self.table
 
     def _clean_table(self):
         children = self.table.get_children();
@@ -319,24 +318,24 @@ class Table:
                 self.table.remove(element)
         #re-attach the source and target labels
         if self.monolingual:
-            source_label = Gtk.Label("Unedited MT")
+            source_label = Gtk.Label("Raw MT")
             self.table.attach(source_label, 1, 1+1, 0, 1+0)
             source_label.show()
 
-            target_label = Gtk.Label("Edited MT")
+            target_label = Gtk.Label("Post-edited MT")
             self.table.attach(target_label, 3, 3+1, 0, 1+0)
             target_label.show()
 
         else:
-            source_label = Gtk.Label("Original")
+            source_label = Gtk.Label("Source")
             self.table.attach(source_label, 1, 1+1, 0, 1+0)
             source_label.show()
 
-            non_modified_target_label = Gtk.Label("Non Edited MT")
-            self.table.attach(non_modified_target_label, 2, 2+1, 0, 1+0)
-            non_modified_target_label.show()
+            #non_modified_target_label = Gtk.Label("Non Edited MT")
+            #self.table.attach(non_modified_target_label, 2, 2+1, 0, 1+0)
+            #non_modified_target_label.show()
 
-            modified_target_label = Gtk.Label("Edited MT")
+            modified_target_label = Gtk.Label("Postedited MT")
             self.table.attach(modified_target_label, 3, 3+1, 0, 1+0)
             modified_target_label.show()
 
@@ -346,7 +345,9 @@ class Table:
         cell.set_cursor_visible(editable)
         cellTextBuffer = cell.get_buffer()
         index = row_index + self.tables_content[self.table_index]
-        text = textwrap.fill(self.tables_content[text_line_type][index].rstrip('\n'), width=40)
+
+        text = textwrap.fill(self.tables_content[text_line_type][index].rstrip('\n'), width=30)
+
         cellTextBuffer.set_text(text)
         cellTextBuffer.create_tag("#F8CBCB",background="#F8CBCB")
         cellTextBuffer.create_tag("#A6F3A6",background="#A6F3A6")
@@ -421,21 +422,22 @@ class Table:
                     self.create_cell(self.reference_text_lines, self.reference_text_views, row_index, True)
                 elif self.table_type == "translation_table" and not self.monolingual:
                     self.create_cell(self.source_text_lines, self.source_text_views, row_index, False)
-                    self.create_cell(self.unedited_reference_text_lines, self.bilingual_reference_text_views, row_index, False)
+                    #self.create_cell(self.unedited_reference_text_lines, self.bilingual_reference_text_views, row_index, False)
                     self.create_cell(self.reference_text_lines, self.reference_text_views, row_index, True)
                 elif self.table_type == "diff_table":
                     self.create_cell(self.source_text_lines, self.source_text_views, row_index, False)
                     self.create_cell(self.reference_text_lines, self.reference_text_views, row_index, False)
 
-            except IndexError:
-                self.next_button.set_visible(False)
+            except IndexError: pass
     def get_latest_modifications (self):
-        source_log = self.load_source_log()
+        log = self.load_log()
         last_modifications = {}
 
-        for a in sorted(source_log.keys()):
-            for b in source_log[a]:
-                last_modifications[b] = source_log[a][b]
+        for a in sorted(log.keys()):
+            for b in log[a]:
+                if isinstance(log[a][b], unicode):
+                    log[a][b] = log[a][b].encode('utf-8')
+                last_modifications[b] = log[a][b]
         return last_modifications
     def create_diff(self, text_buffers_array, color):
         last_modifications = self.get_latest_modifications()
@@ -462,15 +464,17 @@ class Table:
         self.create_diff(self.tables_content[self.reference_text_views],"green")
 
     def _move_in_table(self, ammount_of_lines_to_move, feel_free_to_change_the_buttons = True):
+        #if not self.tables_content[self.initialized]:
+            #self.tables_content[self.initialized] = True
+            #self._fill_table()
         if not self.tables_content[self.initialized]:
+            self._clean_table()
             self.tables_content[self.initialized] = True
             self._fill_table()
-
-        self._clean_table()
+        else:
+            self._clean_table()
         if ammount_of_lines_to_move > 0 or self.tables_content[self.table_index] > 0:
              self.tables_content[self.table_index] += ammount_of_lines_to_move
-        if self.tables_content[self.table_index] == 0:
-            self.back_button.set_visible(False)
         self.create_cells()
         if self.table_type == "diff_table":
             self.create_diffs()
@@ -499,9 +503,9 @@ class Table:
     def _search_button_action(self, button, line_index):
         self._move_in_table(line_index - self.tables_content[self.table_index] - 1)
 
-    def load_source_log(self):
+    def load_log(self):
         jsonlog = {}
-        source_log_filepath = self.output_directory + '/source_log.json'
+        source_log_filepath = self.output_directory + '/log.json'
         try:
             with open(source_log_filepath) as json_data:
                 jsonlog = json.load(json_data)

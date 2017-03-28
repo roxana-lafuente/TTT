@@ -24,6 +24,7 @@
 
 #os is one of the modules that I know comes with 2.7, no questions asked.
 import os
+import datetime
 
 try:
     import gi
@@ -83,18 +84,20 @@ import html_injector
 
 class PostEditing:
 
-    def __init__(self, post_editing_source, post_editing_reference, notebook, grid, output_directory):
+    def __init__(self, post_editing_source, post_editing_reference, notebook, grid, output_directory, bilingual = False):
         self.post_editing_source = post_editing_source
         self.post_editing_reference = post_editing_reference
         self.translation_tab_grid = grid
         self.notebook = notebook
         self.modified_references =  []
         self.saved_modified_references = []
-        self.visibility_of_statistics_menu = True
-        self.output_directory = output_directory
+        filename = os.path.splitext(os.path.basename(post_editing_reference))[0]
+        self.output_directory = output_directory + "/"  + filename + "_" + str(datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S"))
+        if not os.path.exists(self.output_directory): os.makedirs(self.output_directory)
+        self.bilingual = bilingual
 
         self.tables = {}
-        self.source_log = {}
+        self.log = {}
         self.HTML_view = WebKit.WebView()
         uri = "statistics/generated/stats.html"
         uri = os.path.realpath(uri)
@@ -107,9 +110,9 @@ class PostEditing:
         self.saved_origin_filepath = self.output_directory + filename
 
 
-        self.tables["translation_table"] =  Table("translation_table",self.post_editing_source,self.post_editing_reference, self.preparePostEditingAnalysis_event,self.preparePostEditingAnalysis, self.calculate_statistics_event, self.translation_tab_grid, self.output_directory)
+        self.tables["translation_table"] =  Table("translation_table",self.post_editing_source,self.post_editing_reference, self.preparePostEditingAnalysis_event,self.preparePostEditingAnalysis, self.calculate_statistics_event, self.translation_tab_grid, self.output_directory, self.bilingual)
 
-        self.source_log_filepath = self.output_directory + '/source_log.json'
+        self.source_log_filepath = self.output_directory + '/log.json'
 
 
         shutil.rmtree("./statistics/generated", ignore_errors=True)
@@ -117,13 +120,12 @@ class PostEditing:
 
         self.translation_tab_grid.show_all()
         self.tables["translation_table"].save_post_editing_changes_button.hide()
-        self.tables["translation_table"].statistics_button.hide()
         self.tables["translation_table"].insertions_statistics_button.hide()
         self.tables["translation_table"].deletions_statistics_button.hide()
         self.tables["translation_table"].time_statistics_button.hide()
 
     def calculate_time_per_segment(self):
-        if self.source_log.keys():
+        if self.log.keys():
             seconds_spent_by_segment = {}
             percentaje_spent_by_segment = {}
             total_time_spent = 0
@@ -134,13 +136,13 @@ class PostEditing:
                 return itertools.izip(a, b)
 
             now = int(time.time()*1000)
-            myList = sorted(self.source_log.keys())
-            my_source_log = self.source_log
-            my_source_log[now] = self.source_log[myList[-1]]
+            myList = sorted(self.log.keys())
+            my_source_log = self.log
+            my_source_log[now] = self.log[myList[-1]]
 
             #calculate time spent by segment
             for current_timestamp,next_timestamp in pairwise(sorted(my_source_log.keys())):
-                #for current_timestamp,next_timestamp in sorted(self.source_log.keys()):
+                #for current_timestamp,next_timestamp in sorted(self.log.keys()):
                 delta = (int(next_timestamp) - int(current_timestamp))/1000
                 for segment_index in my_source_log[current_timestamp]:
                     if segment_index in seconds_spent_by_segment:
@@ -175,8 +177,6 @@ class PostEditing:
         else:
             segment_source = table_contents[1][segment_index]
             segment_modified = table_contents[2][segment_index]
-        segment_source = segment_source.decode("utf-8").encode("windows-1252").decode("utf-8")
-        segment_modified = segment_modified.decode("utf-8").encode("windows-1252").decode("utf-8")
         id_source = segment_index
         id_target = id_source + 100000
         final_output = '<a href='+ '"' + "javascript:showhide('" +str(id_source)+ "')" + '"' + '><input type="button" value="Source"></a>'
@@ -200,11 +200,7 @@ class PostEditing:
         return ','.join(pie_as_json_string_list)
 
     def calculate_statistics_event(self, button, statistics_name):
-        self.visibility_of_statistics_menu = not self.visibility_of_statistics_menu
-        if statistics_name == "statistics_in_general":
-            self.show_the_available_stats(self.visibility_of_statistics_menu)
-        else:
-            self.show_the_available_stats(False)
+            self.saveChangedFromPostEditing()
             self.calculate_statistics(statistics_name)
             self.notebook.set_current_page(6)
     def calculate_statistics(self, statistics_name):
@@ -236,30 +232,20 @@ class PostEditing:
         self.notebook.show_all()
         if maybe_show_buttons:
             self.show_the_available_stats()
-        else:
-            self.tables["translation_table"].insertions_statistics_button.hide()
-            self.tables["translation_table"].deletions_statistics_button.hide()
-            self.tables["translation_table"].time_statistics_button.hide()
 
-    def show_the_available_stats(self, visibility_of_statistics_menu = True):
+    def show_the_available_stats(self):
         #if the json string is empty, then no calculations have been made
         #and so the buttons should not be shown
         insertions =  self.calculate_insertions_per_segment()[0]
         deletions = self.calculate_deletions_per_segment()[0]
         time = self.calculate_time_per_segment()[0]
 
-        if not visibility_of_statistics_menu:
-            self.tables["translation_table"].insertions_statistics_button.hide()
-            self.tables["translation_table"].deletions_statistics_button.hide()
-            self.tables["translation_table"].time_statistics_button.hide()
-
-        if visibility_of_statistics_menu:
-            if insertions:self.tables["translation_table"].insertions_statistics_button.show()
-            else: self.tables["translation_table"].insertions_statistics_button.hide()
-            if deletions:self.tables["translation_table"].deletions_statistics_button.show()
-            else:self.tables["translation_table"].deletions_statistics_button.hide()
-            if time:self.tables["translation_table"].time_statistics_button.show()
-            else:self.tables["translation_table"].time_statistics_button.hide()
+        if insertions:self.tables["translation_table"].insertions_statistics_button.show()
+        else: self.tables["translation_table"].insertions_statistics_button.hide()
+        if deletions:self.tables["translation_table"].deletions_statistics_button.show()
+        else:self.tables["translation_table"].deletions_statistics_button.hide()
+        if time:self.tables["translation_table"].time_statistics_button.show()
+        else:self.tables["translation_table"].time_statistics_button.hide()
 
 
         if self.tables["translation_table"].REC_button.get_active():
@@ -273,14 +259,6 @@ class PostEditing:
             text_file.close()
         savefile('\n'.join(self.tables["translation_table"].tables_content[self.tables["translation_table"].source_text_lines]), self.saved_origin_filepath)
 
-    def load_source_log(self):
-        jsonlog = {}
-        try:
-            with open(self.source_log_filepath) as json_data:
-                jsonlog= json.load(json_data)
-        except: open(self.source_log_filepath, 'w').close()
-        return jsonlog
-
     def save_using_log(self):
         text_lines_to_save = self.tables["translation_table"].reference_text_lines
 
@@ -289,11 +267,11 @@ class PostEditing:
                 modified_reference = self.tables["translation_table"].translation_reference_text_TextViews_modified_flag[index]
                 if modified_reference not in self.saved_modified_references:
                     self.saved_modified_references.append(modified_reference)
-                    if self.last_change_timestamp not in self.source_log:
-                        self.source_log[self.last_change_timestamp] = {}
-                    self.source_log[self.last_change_timestamp][index] = modified_reference
+                    if self.last_change_timestamp not in self.log:
+                        self.log[self.last_change_timestamp] = {}
+                    self.log[self.last_change_timestamp][index] = modified_reference
         with open(self.source_log_filepath, 'w') as outfile:
-            json.dump(self.source_log, outfile)
+            json.dump(self.log, outfile)
 
 
     def saveChangedFromPostEditing(self):
@@ -315,8 +293,7 @@ class PostEditing:
         self.addDifferencesTab()
 
         self.tables["translation_table"].save_post_editing_changes_button.hide()
-        self.visibility_of_statistics_menu = False
-        self.tables["translation_table"].statistics_button.show()
+        self.show_the_available_stats()
 
 
     def preparePostEditingAnalysis_event(self, button):
