@@ -102,7 +102,7 @@ def get_tmtrain_command(mdir,
     cmd += " -cores 6 -corpus " + corpus + " -f " + in_lang + " -e " + out_lang
     cmd += " -alignment grow-diag-final-and -reordering msd-bidirectional-fe "
     cmd += "-lm 0:3:" + lm_file.replace("~", "$HOME") + " -external-bin-dir "
-    cmd += mdir + "/scripts >& " + output_dir + "/" + train_fn
+    cmd += mdir + "/scripts 2>&1 " + output_dir + "/" + train_fn
     return cmd + amp + "\n"
 
 
