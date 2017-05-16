@@ -2,7 +2,13 @@ GTM
 (General Text Matcher)
 version 1.3
 available from: http://nlp.cs.nyu.edu/GTM/
-written by: (in chronological order of first contribution) Ryan Green, Joseph P. Turian, I. Dan Melamed, Luke Shen, Ali Argyle, Ben Wellington, Daniel Galron
+written by:
+	Ryan Green <rtgreen at cs dot nyu dot edu>
+	Joseph P. Turian <turian at cs dot nyu dot edu>
+	I. Dan Melamed <melamed at cs dot nyu dot edu>
+	Luke Shen <ls750 at cs dot nyu dot edu>
+	Ali Argyle <argyle at cs dot nyu dot edu>
+
 
 TABLE OF CONTENTS
   1. Introduction
@@ -107,9 +113,6 @@ java gtm					\
 	[+s|-s|--scoresegs|--noscoresegs]	\
 	[+d|-d|--scoredocs|--noscoredocs]	\
 	[-t| --textin]                          \
-        [-l| --lineFile]                                \
-	[--dumphits hitsfile]			\
-	[--dumpruns runsfile]			\
 	testfile referencefile(s)
 
 If you are using the pre-compiled JAR file, to invoke the program you
@@ -121,9 +124,6 @@ java -jar gtm.jar				\
 	[+s|-s|--scoresegs|--noscoresegs]	\
 	[+d|-d|--scoredocs|--noscoredocs]	\
 	[-t| --textin]                          \
-        [-l| --lineFile]                                \
-	[--dumphits hitsfile]			\
-	[--dumpruns runsfile]			\
 	testfile referencefile(s)
 
 The parameters are as follows:
@@ -159,13 +159,6 @@ The parameters are as follows:
 	-t / --textin		The testfile and the referencefile(s)
 				are in plain text format.
 				Default is sgml format
-
-	--dumpfile file		Specify the file for dumping the hits
-				and runs
-
-	--dumphits		toggle dumping hits
-
-	--dumpruns		toggle dumping runs
 
 	testfile                The location of an SGML file containing
 				the test documents. This testfile
@@ -328,9 +321,11 @@ and ref2:
 Questions? Comments? Suggestions?
 	Bugs? Code patches? Feature requests?
 
-We welcome all feedback.
-Please email feedback to I. Dan Melamed : <lastname> at cs dot nyu dot edu
+This is alpha software and we welcome all feedback.
+Please email feedback to Joseph Turian and I. Dan Melamed.
+(Email addresses provided at the top of this file.)
+
 
 ***
 
-$Id: README 7 2008-01-27 21:16:28Z melamed $
+$Id: README,v 1.19 2003/07/09 03:35:44 ls750 Exp $

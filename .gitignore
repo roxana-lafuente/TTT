@@ -94,6 +94,7 @@ ENV/
 # Specific TTT files and folders
 saved/
 saved_but_to_be_deleted_soon/
+evaluation_scripts/gtm-1.3-binary/tests
 statistics/generated
 installation/TTT-CygwinInstaller/installer
 moses.config

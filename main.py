@@ -405,17 +405,16 @@ class MyWindow(Gtk.Window):
     def _prepare_corpus(self, button):
         """@brief     Runs moses truecaser, tokenizer and cleaner."""
         output = ""
-        win_output_directory = self.language_model_directory_entry.get_text()
-        if self._has_chosen_preprocess_params(win_output_directory):
+        if self._has_chosen_preprocess_params(self.output_directory):
             language_model_directory = adapt_path_for_cygwin(self.is_windows,
-                                                     win_output_directory)
+                                                     self.output_directory)
             # Change directory to the language_model_directory.
             try:
-                os.chdir(win_output_directory)
+                os.chdir(self.output_directory)
             except:
                 # Output directory does not exist.
-                os.mkdir(win_output_directory)
-                os.chdir(win_output_directory)
+                os.mkdir(self.output_directory)
+                os.chdir(self.output_directory)
             cmds = []
             # 1) Tokenization
             # a) Target text
@@ -505,6 +504,9 @@ class MyWindow(Gtk.Window):
                 output += "Output: %s\n%s\n\n\n" % (out, err)
             if all_ok:
                 self.is_corpus_preparation_ready = True
+                with open(self.output_directory + '/lm.ini', 'w') as f:
+                    f.write("source_lang:"+self.source_lang+"\n")
+                    f.write("target_lang:"+self.target_lang+"\n")
         else:
             output += "ERROR. You need to complete all fields."
         self.preprocessResultsTextBuffer.set_text(output)
@@ -551,10 +553,9 @@ class MyWindow(Gtk.Window):
             self.output_directory = dialog.get_filename()
             self.post_editing_output.set_text(self.output_directory)
             self.evaluation_output.set_text(self.output_directory)
+            self.mt_output.set_text(self.output_directory)
 
         dialog.destroy()
-        if command == "change output directory and maybe create post edition table":
-            self._check_if_both_files_are_choosen_post_edition(None, "")
 
 
     def _add_dir_filters(self, dialog):
@@ -703,7 +704,8 @@ class MyWindow(Gtk.Window):
         self.mt_out2_button = Gtk.Button("Choose a Model")
         self.mt_out2_button.connect("clicked",
                                    self._on_dir_clicked,
-                                   self.language_model_directory_entry)
+                                   self.language_model_directory_entry,
+                                   "change output directory")
         inside_grid.attach_next_to(self.mt_out2_button,
                                    self.mt_in_button,
                                    Gtk.PositionType.RIGHT,
@@ -720,11 +722,31 @@ class MyWindow(Gtk.Window):
                 1,
                 50)
 
+        #  Evaluation Metrics: Output Text Picker
+        ot_label = Gtk.Label("Output Directory")
+        inside_grid.attach_next_to(ot_label,
+                                   mt_in_label,
+                                   Gtk.PositionType.BOTTOM, 1, 10)
+        self.mt_output = Gtk.Entry()
+        self.mt_output.set_text("")
+        inside_grid.attach_next_to(self.mt_output,
+                                   self.mt_in_text,
+                                   Gtk.PositionType.BOTTOM, 1, 10)
+        ot_button = Gtk.Button("Choose Directory")
+        ot_button.connect("clicked",
+                    self._on_dir_clicked,
+                    self.mt_output,
+                    "change output directory")
+
+        inside_grid.attach_next_to(ot_button,
+                        self.mt_in_button,
+                        Gtk.PositionType.BOTTOM, 1, 10)
+
         # Start machine translation button.
         sbutton = Gtk.Button(label="Start machine translation")
         sbutton.connect("clicked", self._machine_translation)
         inside_grid.attach_next_to(sbutton,
-                                   self.mt_in_button,
+                                   ot_button,
                                    Gtk.PositionType.BOTTOM,
                                    1,
                                    10)
@@ -770,17 +792,21 @@ class MyWindow(Gtk.Window):
     def _machine_translation(self, button):
         """@brief     Runs the decoder."""
         output = ""
+        target_lang = ""
+        for line in open(self.output_directory + '/lm.ini'):
+            if "target_lang" in line: target_lang = line.split(':')[1]; print line
         in_file = self.mt_in_text.get_text()
         if not is_valid_file(in_file):
             output = "ERROR: %s should be a valid file." % in_file
         elif not self._has_empty_last_line(in_file):
             output = "ERROR: %s lacks an empty line at the end of the file." % in_file
+        elif not target_lang:
+            output = "ERROR: No Language Model could be loaded.\n(A file called lm.ini should be found at the output directory)"
         else:
             base = os.path.basename(in_file)
-            out_file = os.path.dirname(in_file) + os.path.splitext(base)[0] + "_translated" + os.path.splitext(base)[1]
-
+            out_mt_file = self.output_directory + "/" + os.path.splitext(base)[0] + "_translated." + target_lang.replace('\n','')
             in_file = adapt_path_for_cygwin(self.is_windows, in_file)
-            out_file = adapt_path_for_cygwin(self.is_windows, out_file)
+            out_mt_file = adapt_path_for_cygwin(self.is_windows, out_mt_file)
             output += "Running decoder....\n\n"
             lmdir = self.language_model_directory_entry.get_text()
             if is_valid_dir(lmdir):
@@ -788,14 +814,14 @@ class MyWindow(Gtk.Window):
                 cmd = get_test_command(self.moses_dir,
                                        adapt_path_for_cygwin(self.is_windows, lmdir) + "/train/model/moses.ini",
                                        in_file,
-                                       out_file)
+                                       out_mt_file)
                 # use Popen for non-blocking
                 proc = subprocess.Popen([cmd],
                                         stdout=subprocess.PIPE,
                                         stderr=subprocess.PIPE,
                                         shell=True)
                 (out, err) = proc.communicate()
-                f = open(out_file, 'r')
+                f = open(out_mt_file, 'r')
                 mt_result = f.read()
                 if mt_result == "":
                     if out != "":
@@ -819,7 +845,7 @@ class MyWindow(Gtk.Window):
         inside_grid = Gtk.Grid()
         texts_menu_frame = Gtk.Frame(label="Evaluation")
         # Evaluation Metrics: Source Text Picker
-        st_label = Gtk.Label("Source text")
+        st_label = Gtk.Label(" Machine translation")
         inside_grid.add(st_label)
         self.evaluation_source = Gtk.Entry()
         self.evaluation_source.set_text("")
@@ -831,7 +857,7 @@ class MyWindow(Gtk.Window):
         inside_grid.add(self.st_button)
 
         #  Evaluation Metrics: Reference Text Picker
-        tt_label = Gtk.Label("Reference text")
+        tt_label = Gtk.Label("Reference")
         inside_grid.attach_next_to(tt_label,
                                    st_label,
                                    Gtk.PositionType.BOTTOM, 1, 10)
@@ -933,7 +959,12 @@ class MyWindow(Gtk.Window):
         files_exists = (is_valid_file(self.evaluation_source.get_text())
                 and is_valid_file(self.evaluation_reference.get_text())
                 and is_valid_dir(self.evaluation_output.get_text()))
+        equal_ammount_of_lines = False
         if fields_filled and files_exists:
+            num_lines_source = sum(1 for line in open(self.evaluation_source.get_text()))
+            num_lines_reference = sum(1 for line in open(self.evaluation_reference.get_text()))
+            equal_ammount_of_lines = num_lines_source == num_lines_reference
+        if fields_filled and files_exists and equal_ammount_of_lines:
             # checkbox_indexes["WER","PER","HTER", "GTM", "BLEU","BLEU2GRAM","BLEU3GRAM"]
             checkbox_indexes = [False] * 8
             if self.check_WER.get_active():
@@ -956,11 +987,12 @@ class MyWindow(Gtk.Window):
                               self.evaluation_source.get_text(),
                               self.evaluation_reference.get_text())
             evaluation_output_filename = self.evaluation_output.get_text()+"/evaluation_output.txt"
-            print evaluation_output_filename
             f = open(evaluation_output_filename, 'w')
             f.write(result)
             f.close()
             self.resultsTextBuffer.set_text(result)
+        if not equal_ammount_of_lines:
+            self.resultsTextBuffer.set_text("ERROR. The files need to have the same ammount of lines.")
         if not fields_filled:
             self.resultsTextBuffer.set_text("ERROR. You need to complete all fields.")
         if not files_exists:
@@ -974,6 +1006,7 @@ class MyWindow(Gtk.Window):
     def init_persistent_post_editing_state(self):
         self.post_editing_source_text = ""
         self.post_editing_reference_text = ""
+        self.post_editing_warning_text = ""
         self.choosed_bilingual_post_editing_mode = False
 
     def _set_post_editing(self):
@@ -984,8 +1017,8 @@ class MyWindow(Gtk.Window):
         self.postEdition_grid.set_column_spacing(20)
 
         #  Post Editing Frame.
+        PE_files_settings_frame = Gtk.Frame(label="")
         self.postEditing_file_menu_grid = Gtk.Grid()
-        texts_menu_frame = Gtk.Frame(label="Post-Editing")
         # Post Editing : Source Text Picker
         self.post_editing_reference_label = Gtk.Label("Select MT file")
         self.postEditing_file_menu_grid.add(self.post_editing_reference_label)
@@ -1012,8 +1045,6 @@ class MyWindow(Gtk.Window):
         self.post_editing_source_button = Gtk.Button("Choose File")
         self.post_editing_source_button.connect("clicked", self._on_file_clicked, self.post_editing_source)
         self.postEditing_file_menu_grid.attach_next_to(self.post_editing_source_button, self.post_editing_reference_button, Gtk.PositionType.BOTTOM, 1, 10)
-        self.post_editing_reference.connect("changed", self._check_if_both_files_are_choosen_post_edition, "reference")
-        self.post_editing_source.connect("changed", self._check_if_both_files_are_choosen_post_edition, "source")
 
         #  Post Editing: Output Text Picker
         ot_label = Gtk.Label("Output Directory")
@@ -1029,20 +1060,36 @@ class MyWindow(Gtk.Window):
         ot_button.connect("clicked",
                                self._on_dir_clicked,
                                self.post_editing_output,
-                               "change output directory and maybe create post edition table")
+                               "change output directory")
         self.postEditing_file_menu_grid.attach_next_to(ot_button,
                                    self.post_editing_source_button,
                                    Gtk.PositionType.BOTTOM, 1, 10)
 
+        # Start corpus preprocessing button.
+        startPostEdition_btn = Gtk.Button(label="Start Post-editing")
+        startPostEdition_btn.connect("clicked", self._check_and_run_post_edition)
+        # self.preparation.set_border_width(10)
+        self.postEditing_file_menu_grid.attach_next_to(startPostEdition_btn,ot_label, Gtk.PositionType.BOTTOM, 3, 1)
+        self.post_editing_warning_label = Gtk.Label(self.post_editing_warning_text)
+        self.postEditing_file_menu_grid.attach_next_to(self.post_editing_warning_label,startPostEdition_btn, Gtk.PositionType.RIGHT, 1, 1)
 
-        self.postEdition_grid.add(self.postEditing_file_menu_grid)
+        PE_files_settings_frame.add(self.postEditing_file_menu_grid)
+        self.postEdition_grid.add(PE_files_settings_frame)
+
+        #self.postEdition_grid.add(self.postEditing_file_menu_grid)
         self.preparation.pack_start(self.postEdition_grid, expand=True, fill=True, padding =0)
         self.notebook.insert_page(self.preparation, Gtk.Label('Post Editing'), 4)
         self.post_editing_source_label.set_no_show_all(True)
         self.post_editing_source.set_no_show_all(True)
         self.post_editing_source_button.set_no_show_all(True)
         self.post_editing_source_label.set_no_show_all(True)
-        self.toggle_bilingual(None)
+
+        visibility = self.btn_check_bilingual.get_active()
+        self.choosed_bilingual_post_editing_mode = visibility
+        self.post_editing_source_label.set_visible(visibility)
+        self.post_editing_source.set_visible(visibility)
+        self.post_editing_source_button.set_visible(visibility)
+        self.post_editing_source_label.set_visible(visibility)
 
         self.notebook.show_all()
 
@@ -1051,27 +1098,56 @@ class MyWindow(Gtk.Window):
         self.choosed_bilingual_post_editing_mode = visibility
         self.post_editing_source_label.set_visible(visibility)
         self.post_editing_source.set_visible(visibility)
+        self.post_editing_source.set_text("")
         self.post_editing_source_button.set_visible(visibility)
         self.post_editing_source_label.set_visible(visibility)
+    def _check_and_run_post_edition(self, object):
+        self.post_editing_source_text = self.post_editing_source.get_text()
+        self.post_editing_reference_text = self.post_editing_reference.get_text()
 
-    def _check_if_both_files_are_choosen_post_edition(self, object, file_type=""):
-        if file_type  == "source": self.post_editing_source_text = self.post_editing_source.get_text()
-        if file_type  == "reference": self.post_editing_reference_text = self.post_editing_reference.get_text()
-        if self.output_directory:
-            if ((self.post_editing_source.get_text()
-            and self.post_editing_reference.get_text())
-            or not self.btn_check_bilingual.get_active()):
-                post_editing_source_text = self.post_editing_source.get_text()
-                post_editing_reference_text = self.post_editing_reference.get_text()
-                self._set_post_editing()
-                self.notebook.set_current_page(4)
-                # binding of the buttons events to the PostEditing methods
-                self.PostEditing = PostEditing(
-                    post_editing_source_text,  # so that it can read the source file
-                    post_editing_reference_text,  # so that it can read the reference file
-                    self.notebook,  # so that it can add the diff tab when needed
-                    self.postEdition_grid, # so that it can add search entry and table
-                    self.output_directory) # so that it can save files on the output directory
+        fields_filled = (
+                (self.post_editing_source.get_text() or not self.btn_check_bilingual.get_active())
+                and self.post_editing_reference.get_text()
+                and self.post_editing_output.get_text())
+        files_exists = (
+                (is_valid_file(self.post_editing_source.get_text())  or not self.btn_check_bilingual.get_active())
+                and is_valid_file(self.post_editing_reference.get_text())
+                and is_valid_dir(self.post_editing_output.get_text()))
+
+        self.post_editing_warning_text = ""
+        equal_ammount_of_lines = True
+        if fields_filled and files_exists:
+            self.post_editing_warning_label.set_text("")
+            if (self.post_editing_source.get_text() or not self.btn_check_bilingual.get_active()):
+                if self.post_editing_source.get_text():
+                    num_lines_source = sum(1 for line in open(self.post_editing_source_text))
+                    num_lines_reference = sum(1 for line in open(self.post_editing_reference_text))
+                    equal_ammount_of_lines = num_lines_source == num_lines_reference
+                    self.post_editing_warning_label.set_text("The files need to have the same ammount of lines.")
+                if equal_ammount_of_lines:
+                    post_editing_source_text = self.post_editing_source.get_text()
+                    post_editing_reference_text = self.post_editing_reference.get_text()
+                    self._set_post_editing()
+                    self.notebook.set_current_page(4)
+                    # binding of the buttons events to the PostEditing methods
+                    self.PostEditing = PostEditing(
+                        post_editing_source_text,  # so that it can read the source file
+                        post_editing_reference_text,  # so that it can read the reference file
+                        self.notebook,  # so that it can add the diff tab when needed
+                        self.postEdition_grid, # so that it can add search entry and table
+                        self.output_directory,# so that it can save files on the output directory
+                        self.btn_check_bilingual.get_active()) # so that it knows wether to render a monolingual or bilingual table
+
+        if not fields_filled:
+            self.post_editing_warning_label.set_text("ERROR. You need to complete all fields.")
+        elif not files_exists:
+            if not is_valid_file(self.evaluation_source.get_text()):
+                self.post_editing_warning_label.set_text("ERROR. The source file does not exist.")
+            if not is_valid_file(self.evaluation_reference.get_text()):
+                self.post_editing_warning_label.set_text("ERROR. The reference file does not exist.")
+            if not is_valid_dir(self.evaluation_output.get_text()):
+                self.post_editing_warning_label.set_text("ERROR. The output directory is not choosen.")
+
 
     def gtk_change_visuals(self, light_option="unchanged", theme="unchanged"):
         if Gtk.MAJOR_VERSION >= 3 and Gtk.MINOR_VERSION >= 14:
